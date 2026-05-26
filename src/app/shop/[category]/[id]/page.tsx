@@ -118,10 +118,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
         {/* ==================================================================================== */}
         {/* LEFT COLUMN: THE GALLERY (Mobile: Top, Desktop: Left) */}
         {/* ==================================================================================== */}
-        <div className="flex flex-col md:flex-row-reverse gap-4 md:gap-6 h-fit">
+        <div className="flex flex-col md:flex-row-reverse gap-4 md:gap-6 h-fit md:items-start">
           
           {/* Main 1:1 Carousel Image */}
-          <div className="flex-1 relative aspect-square bg-white rounded-3xl md:rounded-[2.5rem] border border-gray-100 shadow-sm flex items-center justify-center overflow-hidden group p-0">
+          <div className="w-full relative aspect-square bg-white rounded-3xl md:rounded-[2.5rem] border border-gray-100 shadow-sm flex items-center justify-center overflow-hidden group p-0">
             {displayImages.length > 0 ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={displayImages[currentImageIndex]} alt={product.shortName} className="w-full h-full object-cover transition-transform duration-500" />
@@ -144,12 +144,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
 
           {/* Thumbnails Grid */}
           {displayImages.length > 1 && (
-            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto no-scrollbar md:w-20 lg:w-24 flex-shrink-0 snap-x">
+            <div className="flex md:flex-col gap-2 lg:gap-3 overflow-x-auto md:overflow-y-auto flex-shrink-0 snap-x md:max-h-[600px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {displayImages.map((img: string, idx: number) => (
                 <button 
                   key={idx} 
                   onClick={() => setCurrentImageIndex(idx)}
-                  className={`relative w-20 h-20 lg:w-24 lg:h-24 flex-shrink-0 snap-center rounded-2xl bg-white border-2 overflow-hidden transition-all duration-300 p-0 ${currentImageIndex === idx ? 'border-brand-blue shadow-md' : 'border-gray-100 opacity-60 hover:opacity-100'}`}
+                  className={`relative w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex-shrink-0 snap-center rounded-xl md:rounded-2xl bg-white border-2 overflow-hidden transition-all duration-300 p-0 ${currentImageIndex === idx ? 'border-brand-blue shadow-md' : 'border-gray-100 opacity-60 hover:opacity-100'}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
@@ -167,7 +167,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
            {/* CATEGORY TAG, NAME & PRICE */}
            <div className="order-3 md:order-1 mt-6 md:mt-0">
              <p className="text-brand-blue font-black uppercase tracking-widest text-xs md:text-sm mb-2">{product.category}</p>
-             <h1 className="text-3xl md:text-5xl font-black text-primary tracking-tighter leading-tight">
+             <h1 className="text-2xl md:text-3xl font-black text-primary tracking-tighter leading-tight">
                {product.name}
              </h1>
              
@@ -304,7 +304,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
                  <ProductCard 
                    key={relProduct.id} 
                    product={relProduct} 
-                   category={relProduct.category.toLowerCase().replace(/ /g, '-')} 
+                   // FIXED: Removed the category prop here!
                  />
               ))}
            </div>

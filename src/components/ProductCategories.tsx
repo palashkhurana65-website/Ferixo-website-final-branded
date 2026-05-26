@@ -86,7 +86,7 @@ export default function ProductCategories() {
                   const imageUrl = product.Image?.[0]?.url || "/placeholder.png";
 
                   return (
-                    <Link key={product.id} href={`/product/${product.id}`} className="group flex flex-col gap-3 md:gap-4">
+                    <Link key={product.id} href={`/shop/${product.category ? product.category.toLowerCase().replace(/\s+/g, '-') : 'all'}/${product.id}`} className="group flex flex-col gap-3 md:gap-4"> 
                       <div className="relative aspect-square w-full bg-canvas rounded-2xl border border-gray-100 overflow-hidden group-hover:border-brand-blue group-hover:shadow-md transition-all">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={imageUrl} alt={product.shortName || product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />

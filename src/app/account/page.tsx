@@ -119,7 +119,7 @@ export default function AccountPage() {
             Sign In
           </Link>
           <p className="text-sm font-medium text-gray-500">
-            Don't have an account? <Link href="/register" className="text-brand-blue font-bold hover:underline">Create one</Link>
+            Don't have an account? <Link href="/signup" className="text-brand-blue font-bold hover:underline">Create one</Link>
           </p>
         </div>
       </div>
