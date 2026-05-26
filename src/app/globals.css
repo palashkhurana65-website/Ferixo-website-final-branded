@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #f8f8f8;
+  --color-primary: #121212;
+  --color-brand-blue: #004de7;
+  --color-brand-orange: #ff7a26;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-primary);
+  }
+}
