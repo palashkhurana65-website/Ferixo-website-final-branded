@@ -5,34 +5,25 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Placeholder data - replace the image paths with your actual files in the public folder
+// Cleaned up data - just images and a blank link
 const slides = [
   {
     id: 1,
     desktopImg: "/hero/desktop-1.png", 
     mobileImg: "/hero/mobile-1.png",   
-    title: "Premium Insulated Bottles",
-    subtitle: "Engineered to keep your focus sharp and your drinks ice-cold for 24 hours.",
-    ctaText: "Shop Bottles",
-    ctaLink: "/shop/bottles",
+    link: "/shop/bottles/560c29e3-81ad-4565-8760-31bfc3c210c0", // Add your manual navigation paths here later
   },
   {
     id: 2,
     desktopImg: "/hero/desktop-2.jpg",
     mobileImg: "/hero/mobile-2.jpg",
-    title: "The Minimalist Tumbler",
-    subtitle: "Matte black aesthetics meet studio-grade insulation for your daily commute.",
-    ctaText: "Explore Tumblers",
-    ctaLink: "/shop/tumblers",
-  },
+    link: "#",
+  },  // /shop/coffee-cups/your-specific-product-id-here 
   {
     id: 3,
-    desktopImg: "/hero/desktop-3.png", // 1920x1080
-    mobileImg: "/hero/mobile-3.jpg",  // 1080x1350
-    title: "Modern Coffee Cups",
-    subtitle: "Start your morning right with a flawless, spill-proof design.",
-    ctaText: "View Coffee Cups",
-    ctaLink: "/shop/coffee-cups",
+    desktopImg: "/hero/desktop-3.png", 
+    mobileImg: "/hero/mobile-3.jpg",  
+    link: "#",
   },
 ];
 
@@ -68,7 +59,8 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative w-full h-[70vh] md:h-[80vh] lg:h-[85vh] bg-canvas group overflow-hidden">
+    // FIXED: Swapped vh heights for strict aspect ratios to perfectly fit your design canvas
+    <div className="relative w-full aspect-[1080/1350] md:aspect-[1920/1080] bg-canvas group overflow-hidden">
       
       {/* Scrollable Track */}
       <div 
@@ -79,12 +71,14 @@ export default function HeroCarousel() {
         {slides.map((slide) => (
           <div key={slide.id} className="relative w-full h-full flex-shrink-0 snap-center">
             
+            {/* The Blank Full-Screen Link */}
+            <Link href={slide.link} className="absolute inset-0 z-20 block"></Link>
+
             {/* Desktop Image Block (Hidden on mobile) */}
             <div className="hidden md:block w-full h-full relative">
-              <div className="absolute inset-0 bg-black/30 z-10"></div> {/* Dark overlay for text readability */}
               <Image 
                 src={slide.desktopImg}
-                alt={slide.title}
+                alt={`Slide ${slide.id}`}
                 fill
                 priority={slide.id === 1}
                 className="object-cover object-center"
@@ -93,27 +87,13 @@ export default function HeroCarousel() {
 
             {/* Mobile Image Block (Hidden on desktop) */}
             <div className="block md:hidden w-full h-full relative">
-               <div className="absolute inset-0 bg-black/40 z-10"></div> {/* Slightly darker overlay for mobile */}
                <Image 
                 src={slide.mobileImg}
-                alt={slide.title}
+                alt={`Slide ${slide.id}`}
                 fill
                 priority={slide.id === 1}
                 className="object-cover object-center"
               />
-            </div>
-
-            {/* Text & CTA Overlay */}
-            <div className="absolute inset-0 z-20 flex flex-col justify-center items-center text-center px-4 md:px-8">
-               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700">
-                 {slide.title}
-               </h1>
-               <p className="text-lg md:text-xl text-gray-200 font-medium mb-8 max-w-2xl animate-in slide-in-from-bottom-4 fade-in duration-700 delay-100">
-                 {slide.subtitle}
-               </p>
-               <Link href={slide.ctaLink} className="bg-brand-blue text-white px-8 py-4 rounded-xl font-black text-lg hover:bg-blue-600 transition-colors shadow-xl shadow-brand-blue/20 animate-in slide-in-from-bottom-4 fade-in duration-700 delay-200 active:scale-95">
-                 {slide.ctaText}
-               </Link>
             </div>
             
           </div>
@@ -135,15 +115,15 @@ export default function HeroCarousel() {
       </button>
 
       {/* Dot Indicators */}
-      <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3 pointer-events-none">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => scrollToSlide(index)}
-            className={`transition-all duration-300 rounded-full ${
+            className={`transition-all duration-300 rounded-full pointer-events-auto ${
               currentSlide === index 
-                ? "w-8 h-2 bg-brand-blue" 
-                : "w-2 h-2 bg-white/50 hover:bg-white/80"
+                ? "w-8 h-2 bg-brand-blue shadow-[0_0_8px_rgba(0,0,0,0.3)]" 
+                : "w-2 h-2 bg-white/70 hover:bg-white/90 shadow-[0_0_4px_rgba(0,0,0,0.3)]"
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

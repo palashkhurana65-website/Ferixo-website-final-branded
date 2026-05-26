@@ -5,12 +5,14 @@ import { createClient } from "../../../../lib/supabase/client";
 import Breadcrumbs from "../../../../components/storefront/Breadcrumbs";
 import ProductCard from "../../../../components/storefront/ProductCard";
 import { Minus, Plus, ShoppingBag, CheckCircle2, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCartStore } from "../../../../lib/store";
 import Link from "next/link";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ category: string, id: string }> }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const unwrappedParams = use(params);
   const supabase = createClient();
   const addItem = useCartStore((state) => state.addItem);
@@ -36,10 +38,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
       if (prodData) {
         setProduct(prodData);
         if (prodData.Variant && prodData.Variant.length > 0) {
-          const firstCapacity = prodData.Variant[0].capacity;
-          setSelectedCapacity(firstCapacity);
-          const colorsForFirstCap = prodData.Variant.filter((v: any) => v.capacity === firstCapacity);
-          if (colorsForFirstCap.length > 0) setSelectedColor(colorsForFirstCap[0].colorName);
+          const variantQuery = searchParams.get('variant');
+          
+          let matchedVariant = null;
+          if (variantQuery) {
+            // Check if the URL parameter matches a real variant (e.g. "matte-black-1000ml")
+            matchedVariant = prodData.Variant.find((v: any) => 
+              `${v.colorName}-${v.capacity}`.toLowerCase().replace(/\s+/g, '-') === variantQuery
+            );
+          }
+
+          if (matchedVariant) {
+            setSelectedCapacity(matchedVariant.capacity);
+            setSelectedColor(matchedVariant.colorName);
+          } else {
+            // Default load (or invalid URL parameter): Set first variant and update URL silently
+            const firstCapacity = prodData.Variant[0].capacity;
+            setSelectedCapacity(firstCapacity);
+            const colorsForFirstCap = prodData.Variant.filter((v: any) => v.capacity === firstCapacity);
+            if (colorsForFirstCap.length > 0) {
+              const firstColor = colorsForFirstCap[0].colorName;
+              setSelectedColor(firstColor);
+              
+              const params = new URLSearchParams(window.location.search);
+              params.set('variant', `${firstColor}-${firstCapacity}`.toLowerCase().replace(/\s+/g, '-'));
+              router.replace(`${window.location.pathname}?${params.toString()}`, { scroll: false });
+            }
+          }
         }
 
         // 2. Fetch Relevant Products (Cross-category)
@@ -52,6 +77,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
       setLoading(false);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unwrappedParams.id, supabase]);
 
   // SMART FILTERING ENGINE
@@ -70,11 +96,31 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
   const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length);
 
+  // Helper to silently update the URL when the user clicks a variant
+  const updateUrlVariant = (color: string | null, cap: string | null) => {
+    if (!color || !cap) return;
+    const slug = `${color}-${cap}`.toLowerCase().replace(/\s+/g, '-');
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('variant', slug);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   const handleCapacityChange = (newCapacity: string) => {
     setSelectedCapacity(newCapacity);
     const colorsForNewCap = product.Variant.filter((v: any) => v.capacity === newCapacity);
     const hasCurrentColor = colorsForNewCap.some((v: any) => v.colorName === selectedColor);
-    if (!hasCurrentColor && colorsForNewCap.length > 0) setSelectedColor(colorsForNewCap[0].colorName);
+    
+    let nextColor = selectedColor;
+    if (!hasCurrentColor && colorsForNewCap.length > 0) {
+      nextColor = colorsForNewCap[0].colorName;
+      setSelectedColor(nextColor);
+    }
+    updateUrlVariant(nextColor, newCapacity);
+  };
+
+  const handleColorChange = (newColor: string) => {
+    setSelectedColor(newColor);
+    updateUrlVariant(newColor, selectedCapacity);
   };
 
   const handleAddToCart = () => {
@@ -194,7 +240,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
                     {availableColorsForCapacity.map((v: any) => (
                       <button 
                         key={v.id} 
-                        onClick={() => setSelectedColor(v.colorName)}
+                        onClick={() => handleColorChange(v.colorName)}
                         className={`p-1.5 pr-5 rounded-full border-2 transition-all font-bold text-sm flex items-center gap-3 ${selectedColor === v.colorName ? 'border-brand-blue bg-blue-50/50 text-primary shadow-sm' : 'border-transparent bg-canvas text-gray-500 hover:bg-gray-200 hover:border-gray-300'}`}
                       >
                         <span className="w-8 h-8 rounded-full shadow-inner border border-black/10" style={{ backgroundColor: v.colorCode }}></span>
