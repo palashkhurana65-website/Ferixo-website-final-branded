@@ -10,7 +10,7 @@ const slides = [
   {
     id: 1,
     desktopImg: "/hero/desktop-1.jpg", 
-    mobileImg: "/hero/mobile-1.jpg",   
+    mobileImg: "/hero/mobile-1.png",   
     title: "Premium Insulated Bottles",
     subtitle: "Engineered to keep your focus sharp and your drinks ice-cold for 24 hours.",
     ctaText: "Shop Bottles",
