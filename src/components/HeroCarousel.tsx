@@ -9,7 +9,7 @@ import Link from "next/link";
 const slides = [
   {
     id: 1,
-    desktopImg: "/hero/desktop-1.jpg", 
+    desktopImg: "/hero/desktop-1.png", 
     mobileImg: "/hero/mobile-1.png",   
     title: "Premium Insulated Bottles",
     subtitle: "Engineered to keep your focus sharp and your drinks ice-cold for 24 hours.",
@@ -28,7 +28,7 @@ const slides = [
   {
     id: 3,
     desktopImg: "/hero/desktop-3.jpg", // 1920x1080
-    mobileImg: "/hero/mobile-3.jpg",  // 1080x135
+    mobileImg: "/hero/mobile-3.jpg",  // 1080x1350
     title: "Modern Coffee Cups",
     subtitle: "Start your morning right with a flawless, spill-proof design.",
     ctaText: "View Coffee Cups",
