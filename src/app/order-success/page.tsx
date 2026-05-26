@@ -57,7 +57,7 @@ export default async function OrderSuccessPage() {
               <ProductCard 
                 key={product.id} 
                 product={product} 
-                category={product.category.toLowerCase().replace(/ /g, '-')} 
+                
               />
             ))}
           </div>
