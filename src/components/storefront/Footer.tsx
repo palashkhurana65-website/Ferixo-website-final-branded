@@ -61,7 +61,7 @@ export default function Footer() {
               <li><Link href="/support" className="text-gray-500 hover:text-brand-blue font-bold text-sm transition-colors">Help Center / FAQs</Link></li>
               
               <li><Link href="/returns" className="text-gray-500 hover:text-brand-blue font-bold text-sm transition-colors">Returns & Refunds</Link></li>
-              <li><Link href="/contact" className="text-gray-500 hover:text-brand-blue font-bold text-sm transition-colors">Contact Us</Link></li>
+              <li><Link href="/support" className="text-gray-500 hover:text-brand-blue font-bold text-sm transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 

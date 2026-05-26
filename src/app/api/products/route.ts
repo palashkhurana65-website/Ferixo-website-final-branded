@@ -28,16 +28,10 @@ export async function POST(request: NextRequest) {
     const validFeatures = features?.filter((text: string) => text.trim() !== "") || [];
     if (validFeatures.length > 0) await supabase.from('Feature').insert(validFeatures.map((text: string) => ({ text, productId: newId })));
 
-    // 3. Insert Variants (FIXED: Stripping temporary frontend IDs)
+    // 3. Insert Variants
     if (variants && variants.length > 0) {
-      const safeVariants = variants.map((v: any) => {
-        // We isolate the 'id' so it is NOT passed to Supabase
-        const { id: tempId, ...variantData } = v; 
-        return { ...variantData, productId: newId };
-      });
-      
-      const { error: variantErr } = await supabase.from('Variant').insert(safeVariants);
-      if (variantErr) throw variantErr;
+      const safeVariants = variants.map((v: any) => ({ ...v, productId: newId }));
+      await supabase.from('Variant').insert(safeVariants);
     }
 
     return NextResponse.json({ success: true, id: newId });

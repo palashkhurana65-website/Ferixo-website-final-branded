@@ -6,10 +6,10 @@ export default function SupportPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const faqs = [
-    { q: "How long does shipping take?", a: "Orders are processed within 24 hours. Standard delivery across India takes 3-5 business days." },
+    { q: "How long does shipping take?", a: "Orders are processed within 24 hours. Standard delivery across India takes 5-7 business days." },
     { q: "How do I track my order?", a: "Once your order ships, you will receive an email with your Blue Dart tracking number and a link to monitor its journey." },
     { q: "Is my Ferixo bottle dishwasher safe?", a: "To preserve the premium matte finish and the vacuum seal, we highly recommend hand-washing your Ferixo gear with warm, soapy water." },
-    { q: "Do you offer a warranty?", a: "Yes, all Ferixo products come with a 1-year limited warranty covering manufacturing defects and vacuum insulation failure." },
+    
   ];
 
   return (

@@ -20,10 +20,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const body = await request.json();
     const { images, features, variants, ...basicInfo } = body;
 
+    
     // 1. Update Core Product
     const { error: updateErr } = await supabase.from('Product').update({
       name: basicInfo.name, 
-      shortName: basicInfo.shortName,
+      shortName: basicInfo.shortName, // <-- ADDED THIS LINE
       description: basicInfo.description, 
       category: basicInfo.category, 
       basePrice: basicInfo.basePrice, 
@@ -42,35 +43,24 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const validFeatures = features?.filter((text: string) => text.trim() !== "") || [];
     if (validFeatures.length > 0) await supabase.from('Feature').insert(validFeatures.map((text: string) => ({ text, productId: id })));
 
-    // 3. Safe Upsert of Variants (FIXED: Preserving active cart/order UUIDs)
-    if (variants) {
-      // Step A: Identify incoming valid UUIDs that we want to keep
-      const incomingValidIds = variants
-        .map((v: any) => v.id)
-        .filter((vid: any) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(vid));
+    // 3. Safe Upsert of Variants
+    if (variants && variants.length > 0) {
+      // Delete old variants first
+      const { error: deleteErr } = await supabase.from('Variant').delete().eq('productId', id);
+      if (deleteErr) throw new Error(`Failed to clear old variants: ${deleteErr.message}`);
 
-      // Step B: Delete variants that belong to this product but were removed by the admin
-      if (incomingValidIds.length > 0) {
-        await supabase.from('Variant').delete().eq('productId', id).not('id', 'in', `(${incomingValidIds.join(',')})`);
-      } else {
-        await supabase.from('Variant').delete().eq('productId', id);
-      }
-
-      // Step C: Process and Upsert variants securely
-      const variantsToUpsert = variants.map((v: any) => {
-        const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v.id);
-        
-        if (isValidUUID) {
-          return { ...v, productId: id }; // Keep UUID to update existing row
-        } else {
-          const { id: tempId, ...rest } = v; // Strip temp ID to create a new row
-          return { ...rest, productId: id };
-        }
+      // Map and insert new variants
+      const safeVariants = variants.map((v: any) => {
+        const { id: oldId, ...variantData } = v; 
+        return { ...variantData, productId: id };
       });
-
-      if (variantsToUpsert.length > 0) {
-        const { error: upsertErr } = await supabase.from('Variant').upsert(variantsToUpsert);
-        if (upsertErr) throw new Error(`Database rejected variants: ${upsertErr.message}`);
+      
+      const { error: insertErr } = await supabase.from('Variant').insert(safeVariants);
+      
+      // THIS IS THE FIX: Strict error checking for the insert
+      if (insertErr) {
+        console.error("Variant Insert Error:", insertErr); // Logs to your VS Code terminal
+        throw new Error(`Database rejected variants: ${insertErr.message}`);
       }
     }
 

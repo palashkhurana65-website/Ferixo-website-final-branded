@@ -33,7 +33,7 @@ export default function SupportPage() {
           <MapPin size={32} className="text-brand-blue mb-4" />
           <h3 className="text-xl font-black text-primary mb-2">Headquarters</h3>
           <p className="text-gray-500 font-medium mb-6">Ferixo Operations</p>
-          <p className="text-primary font-bold">Ludhiana, Punjab, India<br/>141001</p>
+          <p className="text-primary font-bold">Bathinda, Punjab, India<br/>151001</p>
         </div>
       </div>
 
