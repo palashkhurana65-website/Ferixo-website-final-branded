@@ -27,7 +27,7 @@ const slides = [
   },
   {
     id: 3,
-    desktopImg: "/hero/desktop-3.jpg", // 1920x1080
+    desktopImg: "/hero/desktop-3.png", // 1920x1080
     mobileImg: "/hero/mobile-3.jpg",  // 1080x1350
     title: "Modern Coffee Cups",
     subtitle: "Start your morning right with a flawless, spill-proof design.",
