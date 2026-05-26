@@ -4,8 +4,25 @@ import Navbar from "../components/storefront/Navbar";
 import Footer from "../components/storefront/Footer";
 
 export const metadata: Metadata = {
-  title: "Ferixo | Premium Insulated Gear",
-  description: "Engineered for utility, designed for life. Shop premium insulated bottles, tumblers, and cups.",
+  metadataBase: new URL("https://www.ferixo.com"),
+  title: {
+    template: "%s | Ferixo", // Automatically appends the brand to other pages
+    default: "Ferixo | Premium Insulated Drinkware & Lifestyle Gear",
+  },
+  description: "Minimalist, high-performance insulated bottles, tumblers, and coffee cups. Engineered to keep your focus sharp and your drinks ice-cold for 24 hours.",
+  openGraph: {
+    title: "Ferixo | Absolute Utility Guaranteed",
+    description: "Premium insulated gear with matte aesthetics and studio-grade insulation.",
+    url: "https://www.ferixo.com",
+    siteName: "Ferixo",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ferixo | Premium Insulated Drinkware",
+    description: "Engineered for your daily commute.",
+  },
 };
 
 export default function RootLayout({

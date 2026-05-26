@@ -9,6 +9,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCartStore } from "../../../../lib/store";
 import Link from "next/link";
 
+
 export default function ProductDetailPage({ params }: { params: Promise<{ category: string, id: string }> }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -153,7 +154,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 md:pb-24">
-      
+      {/* GOOGLE SHOPPING JSON-LD SCHEMA */}
+      {product && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org/",
+              "@type": "Product",
+              "name": product.name,
+              "image": displayImages,
+              "description": product.description,
+              "brand": {
+                "@type": "Brand",
+                "name": "Ferixo"
+              },
+              "offers": {
+                "@type": "Offer",
+                "url": `https://www.ferixo.com/shop/${unwrappedParams.category}/${product.id}?variant=${searchParams.get('variant') || ''}`,
+                "priceCurrency": "INR", 
+                "price": displayPrice,
+                "itemCondition": "https://schema.org/NewCondition",
+                "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+              }
+            })
+          }}
+        />
+      )}
       {/* OPTIMIZED BREADCRUMBS */}
       <div className="text-sm md:text-base lg:text-lg font-medium text-gray-500 mb-6 md:mb-8">
         <Breadcrumbs productName={product.shortName || product.name} />

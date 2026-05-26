@@ -61,15 +61,17 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         const isValidUUID = typeof v.id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v.id);
         
         if (isValidUUID) {
-          return { ...v, productId: id }; // Keep UUID to update existing row
-        } else {
-          const { id: tempId, ...rest } = v; // Strip temp ID to create a new row
-          return { ...rest, productId: id };
-        }
-      });
+      return { ...v, productId: id }; 
+    } else {
+      const { id: tempId, ...rest } = v; // <--- HERE IS THE ISSUE
+      return { ...rest, productId: id };
+    }
+});
 
       if (variantsToUpsert.length > 0) {
-        const { error: upsertErr } = await supabase.from('Variant').upsert(variantsToUpsert);
+        const { error: upsertErr } = await supabase
+  .from('Variant')
+  .upsert(variantsToUpsert, { onConflict: 'id' });
         if (upsertErr) throw new Error(`Database rejected variants: ${upsertErr.message}`);
       }
     }

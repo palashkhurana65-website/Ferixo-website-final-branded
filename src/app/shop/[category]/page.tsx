@@ -3,6 +3,28 @@ import ProductCard from "../../../components/storefront/ProductCard";
 import Breadcrumbs from "../../../components/storefront/Breadcrumbs";
 import ShopFilters from "../../../components/storefront/ShopFilters";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+// Helper to capitalize words (e.g., 'coffee-cups' -> 'Coffee Cups')
+function formatCategoryName(slug: string) {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
+  const { category } = await params;
+  const cleanName = category === "all" ? "Entire Catalog" : formatCategoryName(category);
+
+  return {
+    title: `Shop ${cleanName}`,
+    description: `Browse our premium selection of ${cleanName.toLowerCase()}. Engineered for minimalist aesthetics and peak thermal performance.`,
+    alternates: {
+      canonical: `/shop/${category}`,
+    },
+  };
+}
 
 export default async function ShopCategoryPage(props: { params: Promise<{ category: string }>, searchParams: Promise<{ [key: string]: string | undefined }> }) {
   const params = await props.params;

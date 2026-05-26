@@ -1,7 +1,15 @@
 import HeroCarousel from "../components/HeroCarousel";
 import FeaturesCinematic from "../components/FeaturesCinematic";
 import ProductCategories from "../components/ProductCategories";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Ferixo | Premium Insulated Bottles & Tumblers",
+  description: "Discover Ferixo's premium line of minimalist insulated drinkware. Matte black aesthetics meet ultimate thermal performance.",
+  alternates: {
+    canonical: "/",
+  },
+};
 export default function Home() {
   return (
     <main className="w-full flex flex-col min-h-screen">
