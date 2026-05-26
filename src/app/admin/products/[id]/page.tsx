@@ -324,14 +324,50 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
                  <button onClick={() => setActiveVariantIndices(null)} className="p-2 bg-canvas rounded-xl text-gray-500 hover:text-brand-orange"><X size={24} /></button>
               </div>
 
-              <div className="mb-8 grid grid-cols-2 gap-4">
+              <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
                  <div>
                     <label className="text-xs uppercase text-gray-500 font-bold block mb-2">Override Price (₹)</label>
-                    <input type="number" placeholder="Optional" className="w-full bg-canvas border border-gray-200 rounded-xl p-4 text-primary font-mono text-[16px] outline-none focus:border-brand-blue" value={variantGroups[activeVariantIndices.g].options[activeVariantIndices.o].price || ""} onChange={(e) => { const ng = [...variantGroups]; ng[activeVariantIndices.g].options[activeVariantIndices.o].price = parseInt(e.target.value) || null; setVariantGroups(ng); }} />
+                    <input 
+                      type="number" 
+                      placeholder="Optional" 
+                      className="w-full bg-canvas border border-gray-200 rounded-xl p-4 text-primary font-mono text-[16px] outline-none focus:border-brand-blue" 
+                      value={activeVariantIndices ? (variantGroups[activeVariantIndices.g].options[activeVariantIndices.o].price || "") : ""} 
+                      onChange={(e) => { 
+                        if (!activeVariantIndices) return;
+                        const ng = [...variantGroups]; 
+                        ng[activeVariantIndices.g].options[activeVariantIndices.o].price = parseInt(e.target.value) || null; 
+                        setVariantGroups(ng); 
+                      }} 
+                    />
+                 </div>
+                 <div>
+                    <label className="text-xs uppercase text-gray-500 font-bold block mb-2">Override MRP (₹)</label>
+                    <input 
+                      type="number" 
+                      placeholder="Optional" 
+                      className="w-full bg-canvas border border-gray-200 rounded-xl p-4 text-primary font-mono text-[16px] outline-none focus:border-brand-blue" 
+                      value={activeVariantIndices ? (variantGroups[activeVariantIndices.g].options[activeVariantIndices.o].mrp || "") : ""} 
+                      onChange={(e) => { 
+                        if (!activeVariantIndices) return;
+                        const ng = [...variantGroups]; 
+                        ng[activeVariantIndices.g].options[activeVariantIndices.o].mrp = parseInt(e.target.value) || null; 
+                        setVariantGroups(ng); 
+                      }} 
+                    />
                  </div>
                  <div>
                     <label className="text-xs uppercase text-gray-500 font-bold block mb-2">Variant Stock</label>
-                    <input type="number" className="w-full bg-canvas border border-gray-200 rounded-xl p-4 text-primary font-mono text-[16px] outline-none focus:border-brand-blue font-bold" value={variantGroups[activeVariantIndices.g].options[activeVariantIndices.o].stock} onChange={(e) => { const ng = [...variantGroups]; ng[activeVariantIndices.g].options[activeVariantIndices.o].stock = parseInt(e.target.value) || 0; setVariantGroups(ng); }} />
+                    <input 
+                      type="number" 
+                      className="w-full bg-canvas border border-gray-200 rounded-xl p-4 text-primary font-mono text-[16px] outline-none focus:border-brand-blue font-bold" 
+                      value={activeVariantIndices ? variantGroups[activeVariantIndices.g].options[activeVariantIndices.o].stock : ""} 
+                      onChange={(e) => { 
+                        if (!activeVariantIndices) return;
+                        const ng = [...variantGroups]; 
+                        ng[activeVariantIndices.g].options[activeVariantIndices.o].stock = parseInt(e.target.value) || 0; 
+                        setVariantGroups(ng); 
+                      }} 
+                    />
                  </div>
               </div>
 

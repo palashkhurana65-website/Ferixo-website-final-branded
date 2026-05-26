@@ -28,10 +28,15 @@ export async function POST(request: NextRequest) {
     const validFeatures = features?.filter((text: string) => text.trim() !== "") || [];
     if (validFeatures.length > 0) await supabase.from('Feature').insert(validFeatures.map((text: string) => ({ text, productId: newId })));
 
-    // 3. Insert Variants
+    // 3. Safe Insert Variants (Strips temp frontend IDs)
     if (variants && variants.length > 0) {
-      const safeVariants = variants.map((v: any) => ({ ...v, productId: newId }));
-      await supabase.from('Variant').insert(safeVariants);
+      const safeVariants = variants.map((v: any) => {
+        const { id, ...rest } = v; // Remove the temporary ID
+        return { ...rest, productId: newId };
+      });
+      
+      const { error: variantErr } = await supabase.from('Variant').insert(safeVariants);
+      if (variantErr) throw variantErr;
     }
 
     return NextResponse.json({ success: true, id: newId });
