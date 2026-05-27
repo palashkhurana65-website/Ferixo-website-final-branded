@@ -1,29 +1,54 @@
+import Link from "next/link";
+import { ArrowLeft, Shield, Eye, Lock } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Ferixo",
+  description: "Ferixo's Privacy Policy. Read how we secure your data, process payments, and protect your digital identity.",
+};
+
 export default function PrivacyPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 pb-32">
-      <h1 className="text-4xl md:text-5xl font-black text-primary tracking-tighter mb-4">Privacy Policy</h1>
-      <p className="text-sm font-bold text-brand-blue mb-10 uppercase tracking-widest">Last Updated: May 2026</p>
-      
-      <div className="space-y-8 text-gray-500 font-medium leading-relaxed">
-        <section>
-          <h2 className="text-xl font-bold text-primary mb-3">Information We Collect</h2>
-          <p>When you visit Ferixo, we automatically collect certain information about your device, including your web browser, IP address, and time zone. When you make a purchase, we collect your name, billing address, shipping address, payment information (securely processed via Razorpay), email address, and phone number.</p>
-        </section>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      <Link href="/" className="inline-flex items-center text-sm font-bold text-gray-400 hover:text-brand-blue transition-colors mb-8 md:mb-12">
+        <ArrowLeft size={16} className="mr-2" /> Back to Home
+      </Link>
 
-        <section>
-          <h2 className="text-xl font-bold text-primary mb-3">How We Use Your Information</h2>
-          <p>We use the Order Information to fulfill any orders placed through the Site (including processing your payment information, arranging for shipping, and providing invoices/order confirmations). We also use this information to communicate with you and screen our orders for potential risk or fraud.</p>
-        </section>
+      <div className="mb-12">
+        <h1 className="text-3xl md:text-5xl font-black text-primary tracking-tighter mb-4">
+          Privacy Policy
+        </h1>
+        <p className="text-gray-500 font-medium text-lg mb-8">
+          Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+        </p>
+      </div>
 
-        <section>
-          <h2 className="text-xl font-bold text-primary mb-3">Data Security</h2>
-          <p>Your personal information is encrypted and transmitted securely. We use industry-standard 256-bit SSL encryption to protect your data during checkout. We do not sell your personal data to third parties.</p>
-        </section>
-        
-        <section>
-          <h2 className="text-xl font-bold text-primary mb-3">Contact Us</h2>
-          <p>For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by email at info@ferixo.com.</p>
-        </section>
+      <div className="prose prose-lg prose-blue max-w-none text-gray-600 space-y-8">
+        <div>
+          <h2 className="text-2xl font-bold text-primary mb-3 flex items-center gap-2"><Eye className="text-brand-blue"/> Information We Collect</h2>
+          <p>We collect information that you provide directly to us when making a purchase or creating an account. This includes your name, email address, shipping address, and phone number. We also use <strong>Google Analytics</strong> to collect anonymous usage data (such as pages visited and device type) to improve our storefront experience.</p>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-primary mb-3 flex items-center gap-2"><Lock className="text-brand-blue"/> Payment Security</h2>
+          <p>We do not store your credit card details or UPI IDs on our servers. All financial transactions are encrypted and processed securely through <strong>Razorpay</strong>, our PCI-DSS compliant payment gateway.</p>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-primary mb-3 flex items-center gap-2"><Shield className="text-brand-blue"/> How We Use Your Data</h2>
+          <p>Your data is used strictly to:</p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>Process and fulfill your orders.</li>
+            <li>Send transactional updates (like order confirmations and tracking links).</li>
+            <li>Improve website performance and customer service.</li>
+          </ul>
+          <p className="mt-4"><strong>We never sell your personal data to third parties.</strong></p>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-primary mb-3">Contact Us</h2>
+          <p>If you have questions about your data or wish to request data deletion, please contact our privacy team at <strong>support@ferixo.com</strong>.</p>
+        </div>
       </div>
     </div>
   );

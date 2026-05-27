@@ -133,7 +133,7 @@ export default function CheckoutPage() {
       const orderRes = await fetch('/api/razorpay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: finalTotal })
+        body: JSON.stringify({ items, couponCode: discountPercent > 0 ? promoCode.toUpperCase() : null })
       });
       const orderData = await orderRes.json();
       if (!orderRes.ok) throw new Error(orderData.error);
