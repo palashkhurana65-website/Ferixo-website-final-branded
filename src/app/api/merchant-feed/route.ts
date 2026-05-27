@@ -25,7 +25,8 @@ export async function GET() {
       // Recreate your dynamic URL slug math
       const categorySlug = product.category ? product.category.toLowerCase().replace(/\s+/g, '-') : 'all';
       const productLink = `${baseUrl}/shop/${categorySlug}/${product.id}`;
-      const imageLink = product.Image?.[0]?.url || `${baseUrl}/placeholder.png`;
+      const rawImageUrl = product.Image?.[0]?.url || "/placeholder.png";
+      const imageLink = rawImageUrl.startsWith("http") ? rawImageUrl : `${baseUrl}${rawImageUrl}`;
       const availability = product.stock > 0 ? "in_stock" : "out_of_stock";
 
       xml += `<item>\n`;
