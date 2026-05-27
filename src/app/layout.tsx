@@ -26,14 +26,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="antialiased bg-canvas text-primary flex flex-col min-h-screen">
+      {/* Adding suppressHydrationWarning tells Next.js to ignore 
+        attributes injected by Chrome extensions like ColorZilla or Grammarly 
+      */}
+      <body 
+        suppressHydrationWarning 
+        className="antialiased bg-canvas text-primary flex flex-col min-h-screen"
+      >
         <Navbar />
         
         {/* flex-grow ensures the footer is always pushed to the bottom of the screen */}
