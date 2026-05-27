@@ -140,13 +140,29 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
       setError(err.message || "Error saving product. Check console."); 
     }
   };
+    
+  // NEW: Delete handler
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to completely delete this product? This action cannot be undone.")) return;
+    
+    setError(null);
+    try {
+      const res = await fetch(`/api/products/${productId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error("Failed to delete product.");
+      
+      router.push("/admin/products");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || "Error deleting product.");
+    }
+  }; 
 
   if (loading) return <div className="p-10 md:p-20 text-primary text-center font-bold text-xl">Loading Editor...</div>;
   
   return (
     <div className="pb-20 max-w-6xl mx-auto">
       
-      {/* HEADER */}
+      {/* HEADEr */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8 bg-white p-4 md:p-0 rounded-2xl md:bg-transparent md:rounded-none border border-gray-100 md:border-none shadow-sm md:shadow-none">
         <div className="flex items-center gap-4">
           <Link href="/admin/products" className="p-3 bg-white md:border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
@@ -156,9 +172,17 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
             <h1 className="text-2xl md:text-3xl font-bold text-primary">{productId === "new" ? "New Product" : "Edit Product"}</h1>
           </div>
         </div>
-        <button onClick={handleSave} className="w-full md:w-auto bg-brand-blue text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-md active:scale-95">
-          <Save size={18} /> Save
-        </button>
+        
+        <div className="flex w-full md:w-auto gap-3">
+          {productId !== "new" && (
+            <button onClick={handleDelete} className="flex-1 md:flex-none bg-white text-brand-orange border border-brand-orange/30 px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-orange-50 transition-all shadow-sm active:scale-95">
+              <Trash2 size={18} /> Delete
+            </button>
+          )}
+          <button onClick={handleSave} className="flex-1 md:flex-none bg-brand-blue text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-md active:scale-95">
+            <Save size={18} /> Save
+          </button>
+        </div>
       </div>
       
       {error && (
@@ -201,12 +225,17 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
 </div>
                     <div>
                         <label className="block text-xs uppercase tracking-wider text-gray-500 mb-2 font-bold">Category</label>
-                        <select className={`w-full bg-canvas border border-gray-200 rounded-xl p-4 outline-none focus:border-brand-blue font-medium text-[16px] cursor-pointer ${formData.category === "" ? "text-gray-400" : "text-primary"}`} value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
+                        <select 
+                          className={`w-full bg-canvas border border-gray-200 rounded-xl p-4 outline-none focus:border-brand-blue font-medium text-[16px] cursor-pointer ${formData.category === "" ? "text-gray-400" : "text-primary"}`} 
+                          value={formData.category} 
+                          onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        >
                             <option value="" disabled>Select Category</option>
                             <option value="Bottles">Bottles</option>
                             <option value="Tumblers">Tumblers</option>
                             <option value="Coffee Cups">Coffee Cups</option>
-                            <option value="Home Living">Home Living</option>
+                            <option value="Makeup Organizers">Makeup Organizers</option>
+                            <option value="Creator Accessories">Creator Accessories</option>
                         </select>
                     </div>
                     <div>

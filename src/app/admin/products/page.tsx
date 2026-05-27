@@ -17,7 +17,15 @@ export default async function InventoryPage({ searchParams }: { searchParams: Pr
 
   const { data: products } = await query;
 
-  const categories = ["All", "Bottles", "Tumblers", "Coffee Cups", "Home Living"];
+  // FIXED: Updated to match exact database string
+  const categories = [
+    "All", 
+    "Bottles", 
+    "Tumblers", 
+    "Coffee Cups", 
+    "Makeup Organizers", 
+    "Creator Accessories"
+  ];
 
   return (
     <div className="space-y-6 md:space-y-8 max-w-7xl mx-auto">

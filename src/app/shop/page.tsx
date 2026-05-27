@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Droplet, Coffee, Home, ArrowRight, Sparkles, LayoutGrid } from "lucide-react";
-
+import { Droplet, Coffee, ArrowRight, Sparkles, LayoutGrid, Box, Camera } from "lucide-react";
 export default function ShopRootPage() {
   const categories = [
     { 
@@ -28,10 +27,18 @@ export default function ShopRootPage() {
       border: "hover:border-amber-500"
     },
     { 
-      name: "Home Living", 
-      slug: "home-living", 
-      icon: Home, 
-      desc: "Elevate your everyday space.", 
+      name: "Makeup Organizers", 
+      slug: "makeup-organizers", 
+      icon: Box, 
+      desc: "Premium storage for your essentials.", 
+      theme: "bg-rose-50 text-rose-600",
+      border: "hover:border-rose-400"
+    },
+    { 
+      name: "Creator Accessories", 
+      slug: "creator-accessories", 
+      icon: Camera, 
+      desc: "Engineered for your digital lifestyle.", 
       theme: "bg-gray-100 text-gray-700",
       border: "hover:border-gray-400"
     },
