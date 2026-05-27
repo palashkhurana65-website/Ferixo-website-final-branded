@@ -1,5 +1,14 @@
 import Link from "next/link";
 import { Droplet, Coffee, ArrowRight, Sparkles, LayoutGrid, Box, Camera } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shop All Collections | Ferixo",
+  description: "Explore Ferixo's complete catalog of premium engineered gear, including minimalist drinkware, makeup organizers, and creator accessories.",
+  alternates: {
+    canonical: '/shop',
+  },
+};
 export default function ShopRootPage() {
   const categories = [
     { 

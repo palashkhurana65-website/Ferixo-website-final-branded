@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "../components/storefront/Navbar";
 import Footer from "../components/storefront/Footer";
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.ferixo.com"),
@@ -41,6 +42,7 @@ export default function RootLayout({
         </main>
         
         <Footer />
+        <GoogleAnalytics gaId="G-H30E08Q2SN" />
       </body>
     </html>
   );
