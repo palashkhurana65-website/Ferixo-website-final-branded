@@ -261,7 +261,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
                 <div>
                   <h3 className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-3 flex justify-between">
                     <span>Color</span>
-                    <span className="text-primary">{selectedColor}</span>
+                   {/* <span className="text-primary">{selectedColor}</span> */}
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {availableColorsForCapacity.map((v: any) => (
@@ -285,7 +285,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ catego
                 <div>
                   <h3 className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-3 flex justify-between">
                     <span>Capacity</span>
-                    <span className="text-brand-blue">{selectedCapacity}</span>
+                   {/* <span className="text-brand-blue">{selectedCapacity}</span>   */}
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {uniqueCapacities.map((cap) => (
