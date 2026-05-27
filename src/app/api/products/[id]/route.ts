@@ -55,7 +55,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       const toInsert: any[] = [];
 
       variants.forEach((v: any) => {
-        // Strict regex check ensures we only treat it as "existing" if it has a real database UUID
+        // Strict regex check ensures we only treat it as "existing" if it has a real database uuid
         const isValidUUID = typeof v.id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v.id);
 
         if (isValidUUID) {
