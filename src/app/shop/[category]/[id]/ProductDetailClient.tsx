@@ -9,7 +9,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCartStore } from "../../../../lib/store";
 import Link from "next/link";
 import { sendGAEvent } from '@next/third-parties/google';
-
+import GoogleReviews from "../../../../components/storefront/GoogleReviews";
 
 export default function ProductDetailClient({ params }: { params: Promise<{ category: string, id: string }> }) {
   const router = useRouter();
@@ -372,7 +372,14 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
            </div>
          )}
       </div>
-
+      
+      {/* ==================================================================================== */}
+      {/* GOOGLE REVIEWS */}
+      {/* ==================================================================================== */}
+      <div className="mt-16 md:mt-24 max-w-7xl mx-auto border-t border-gray-100 pt-12 md:pt-16">
+         <GoogleReviews />
+      </div>
+      
       {/* ==================================================================================== */}
       {/* RELEVANT PRODUCTS (Cross-Selling Loop) */}
       {/* ==================================================================================== */}

@@ -74,8 +74,8 @@ export default function Navbar() {
             {/* DESKTOP NAVIGATION ICONS (Shifted to the Right) */}
             <div className="hidden md:flex items-center justify-end flex-1 gap-6">
               <Link href="/shop" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Shop</Link>
-              <Link href="/about" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">About</Link>
-              
+              <Link href="/about" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Story</Link>
+              <Link href="/support" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Support</Link>
               <div className="h-6 w-px bg-gray-200"></div>
               
               <button onClick={() => setIsDesktopSearchOpen(!isDesktopSearchOpen)} className="text-gray-400 hover:text-brand-blue transition-colors">

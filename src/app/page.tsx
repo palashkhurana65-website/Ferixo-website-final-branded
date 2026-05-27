@@ -2,6 +2,7 @@ import HeroCarousel from "../components/HeroCarousel";
 import FeaturesCinematic from "../components/FeaturesCinematic";
 import ProductCategories from "../components/ProductCategories";
 import type { Metadata } from "next";
+import GoogleReviews from "../components/storefront/GoogleReviews";
 
 export const metadata: Metadata = {
   title: "Ferixo | Premium Insulated Bottles & Tumblers",
@@ -22,7 +23,7 @@ export default function Home() {
 
       {/* 3. Dynamic Product Shelves */}
       <ProductCategories />
-
+      <GoogleReviews />
     </main>
   );
 }
