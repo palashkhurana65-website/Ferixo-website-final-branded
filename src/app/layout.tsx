@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head><meta name="apple-mobile-web-app-title" content="Ferixo" /></head>
       {/* Adding suppressHydrationWarning tells Next.js to ignore 
         attributes injected by Chrome extensions like ColorZilla or Grammarly 
       */}
