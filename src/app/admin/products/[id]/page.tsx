@@ -312,18 +312,31 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
                                         <input type="color" className="w-10 h-10 rounded-lg cursor-pointer bg-canvas border border-gray-200" value={opt.colorCode || "#121212"} onChange={(e) => { const ng = [...variantGroups]; ng[groupIdx].options[optIdx].colorCode = e.target.value; setVariantGroups(ng); }} />
                                         <div className="flex-1">
                                             <input 
-  type="text" 
-  placeholder="Color Name" 
-  className="w-full bg-transparent text-primary text-[16px] font-bold outline-none" 
-  value={opt.colorName} 
-  onChange={(e) => { 
-    const ng = [...variantGroups]; 
-    ng[groupIdx].options[optIdx].colorName = e.target.value; 
-    setVariantGroups(ng); 
-  }} 
-/>
+                                              type="text" 
+                                              placeholder="Color Name" 
+                                              className="w-full bg-transparent text-primary text-[16px] font-bold outline-none" 
+                                              value={opt.colorName} 
+                                              onChange={(e) => { 
+                                                const ng = [...variantGroups]; 
+                                                ng[groupIdx].options[optIdx].colorName = e.target.value; 
+                                                setVariantGroups(ng); 
+                                              }} 
+                                            />
                                         </div>
-                                        <button onClick={() => setActiveVariantIndices({ g: groupIdx, o: optIdx })} className="p-2.5 bg-canvas text-brand-blue rounded-lg font-bold"><ImageIcon size={20}/></button>
+                                        <button onClick={() => setActiveVariantIndices({ g: groupIdx, o: optIdx })} className="p-2.5 bg-canvas text-brand-blue rounded-lg font-bold hover:bg-blue-50 transition-colors" title="Edit Variant Details">
+                                            <ImageIcon size={20}/>
+                                        </button>
+                                        <button 
+                                          onClick={() => { 
+                                            const ng = [...variantGroups]; 
+                                            ng[groupIdx].options = ng[groupIdx].options.filter((_, i) => i !== optIdx); 
+                                            setVariantGroups(ng); 
+                                          }} 
+                                          className="p-2.5 bg-canvas text-brand-orange rounded-lg font-bold hover:bg-orange-50 transition-colors" 
+                                          title="Delete Color"
+                                        >
+                                            <Trash2 size={20} />
+                                        </button>
                                     </div>
                                 ))}
                                 <button 
