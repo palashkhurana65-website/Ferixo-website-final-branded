@@ -28,6 +28,12 @@ export async function trackMetaPurchase(orderData: {
   // 1. Construct the payload matching Meta's strict Conversion API schema
   const payload = {
     data: [
+        {
+        event_name: "Purchase",
+        event_time: Math.floor(Date.now() / 1000),
+        action_source: "website",
+        // ... the rest of your data
+      },
       {
         event_name: "Purchase",
         event_time: Math.floor(Date.now() / 1000), // Unix timestamp in seconds
