@@ -9,20 +9,20 @@ import Link from "next/link";
 const slides = [
   {
     id: 1,
-    desktopImg: "/hero/1.jpg", 
-    mobileImg: "/hero/mobile-1.png",   
+    desktopImg: "/hero/desktop_thermo.jpg", 
+    mobileImg: "/hero/mobile_thermo.jpg",   
     link: "/shop/bottles/560c29e3-81ad-4565-8760-31bfc3c210c0", // Add your manual navigation paths here later
   },
   {
     id: 2,
-    desktopImg: "/hero/desktop-2.jpg",
-    mobileImg: "/hero/2.jpg",
-    link: "#",
+    desktopImg: "/hero/desktop_flexhandle.jpg",
+    mobileImg: "/hero/mobile_flexhandle.jpg",
+    link: "/shop/bottles/560c29e3-81ad-4565-8760-31bfc3c210c0",
   },  // /shop/coffee-cups/your-specific-product-id-here 
   {
     id: 3,
-    desktopImg: "/hero/desktop-3.png", 
-    mobileImg: "/hero/3.jpg",  
+    desktopImg: "/hero/desktop_hydropro.jpg", 
+    mobileImg: "/hero/mobile_hydropro.jpg",  
     link: "#",
   },
 ];

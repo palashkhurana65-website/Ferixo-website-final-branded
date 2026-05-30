@@ -22,25 +22,25 @@ export default function FeaturesCinematic() {
       {/* Desktop Image Background */}
       <div className="hidden lg:block absolute inset-0 w-full h-full">
         <Image
-          src="/hero/1.jpg"
+          src="/features/desktop.jpg"
           alt="Ferixo Premium Build Quality"
           fill
           className="object-cover object-right"
         />
         {/* Horizontal Cinematic Fade (Solid dark on left, fading to transparent on right) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#121212]/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#121212]/60to-transparent"></div>
       </div>
 
       {/* Mobile Image Background */}
       <div className="block lg:hidden absolute top-0 left-0 w-full h-[60vh]">
         <Image
-          src="/features/2.jpg"
+          src="/features/mobile.jpg"
           alt="Ferixo Premium Build Quality"
           fill
           className="object-cover object-top"
         />
         {/* Vertical Cinematic Fade (Solid dark on bottom, fading to transparent on top) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/60to-transparent"></div>
       </div>
 
       {/* Content Container - Increased padding for mobile (px-8 sm:px-10) */}
