@@ -93,7 +93,20 @@ export default function CartPage() {
               </div>
             </div>
 
-            <button onClick={() => router.push('/checkout')} className="w-full bg-primary text-white py-4.5 rounded-2xl font-black text-lg hover:bg-gray-900 transition-all shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-2">
+            <button 
+  onClick={() => {
+    // 🚀 META PIXEL: Track Initiate Checkout
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq('track', 'InitiateCheckout', {
+        value: subtotal,
+        currency: 'INR',
+        num_items: items.length
+      });
+    }
+    router.push('/checkout');
+  }} 
+  className="w-full bg-primary text-white py-4.5 rounded-2xl font-black text-lg hover:bg-gray-900 transition-all shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-2"
+>
               Proceed to Checkout <ArrowRight size={20} />
             </button>
           </div>

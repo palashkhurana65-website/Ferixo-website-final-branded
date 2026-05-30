@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "../../lib/store";
 import { Lock, Tag, ArrowRight, ShoppingBag, MapPin, ChevronRight, Check } from "lucide-react";
 import Link from "next/link";
+import { trackMetaPurchase } from "../actions/metaCapi";
 
 const loadScript = (src: string) => {
   return new Promise((resolve) => {
@@ -109,6 +110,15 @@ export default function CheckoutPage() {
           throw new Error(errorData.error || errorData.message || "Database transaction failed");
         }
         
+        // 🚀 META CAPI: Track 100% Discounted/Free Orders
+        await trackMetaPurchase({
+          orderId: `FREE_${Date.now()}`,
+          value: subtotal, // Send the original value so Meta knows the cart worth
+          currency: "INR",
+          userEmail: formData.email,
+          userPhone: formData.phone,
+        });
+        
         clearCart();
         router.push('/order-success');
         return; // Exit function so it doesn't try to load Razorpay
@@ -164,6 +174,15 @@ export default function CheckoutPage() {
               throw new Error(errorData.error || errorData.message || "Database transaction failed");
             }
             
+            // 🚀 META CAPI: Track Standard Paid Purchases
+            await trackMetaPurchase({
+              orderId: response.razorpay_payment_id,
+              value: finalTotal, // Send the exact amount they paid
+              currency: "INR",
+              userEmail: formData.email,
+              userPhone: formData.phone,
+            });  
+
             clearCart();
             router.push('/order-success');
           } catch (err: any) { 

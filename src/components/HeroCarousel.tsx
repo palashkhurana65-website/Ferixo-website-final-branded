@@ -9,20 +9,20 @@ import Link from "next/link";
 const slides = [
   {
     id: 1,
-    desktopImg: "/hero/desktop-1.png", 
+    desktopImg: "/hero/1.jpg", 
     mobileImg: "/hero/mobile-1.png",   
     link: "/shop/bottles/560c29e3-81ad-4565-8760-31bfc3c210c0", // Add your manual navigation paths here later
   },
   {
     id: 2,
     desktopImg: "/hero/desktop-2.jpg",
-    mobileImg: "/hero/mobile-2.jpg",
+    mobileImg: "/hero/2.jpg",
     link: "#",
   },  // /shop/coffee-cups/your-specific-product-id-here 
   {
     id: 3,
     desktopImg: "/hero/desktop-3.png", 
-    mobileImg: "/hero/mobile-3.jpg",  
+    mobileImg: "/hero/3.jpg",  
     link: "#",
   },
 ];

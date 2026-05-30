@@ -22,7 +22,7 @@ export default function FeaturesCinematic() {
       {/* Desktop Image Background */}
       <div className="hidden lg:block absolute inset-0 w-full h-full">
         <Image
-          src="/hero/features-desktop.jpg"
+          src="/hero/1.jpg"
           alt="Ferixo Premium Build Quality"
           fill
           className="object-cover object-right"
@@ -34,7 +34,7 @@ export default function FeaturesCinematic() {
       {/* Mobile Image Background */}
       <div className="block lg:hidden absolute top-0 left-0 w-full h-[60vh]">
         <Image
-          src="/hero/features-mobile.jpg"
+          src="/features/2.jpg"
           alt="Ferixo Premium Build Quality"
           fill
           className="object-cover object-top"

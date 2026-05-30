@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "../components/storefront/Navbar";
 import Footer from "../components/storefront/Footer";
 import { GoogleAnalytics } from '@next/third-parties/google';
+import MetaPixel from "../components/MetaPixel";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.ferixo.com"),
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         suppressHydrationWarning 
         className="antialiased bg-canvas text-primary flex flex-col min-h-screen"
       >
+        <MetaPixel />
         <Navbar />
         
         {/* flex-grow ensures the footer is always pushed to the bottom of the screen */}
