@@ -27,6 +27,7 @@ export async function trackMetaPurchase(orderData: {
 
   // 1. Construct the payload matching Meta's strict Conversion API schema
   const payload = {
+    test_event_code: "TEST12345",
     data: [
         {
         event_name: "Purchase",
