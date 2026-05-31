@@ -76,7 +76,7 @@ export default function Navbar() {
               <Link href="/shop" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Shop</Link>
               <Link href="/about" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Story</Link>
               <Link href="/support" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Support</Link>
-               <Link href="/reviews" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Reviews</Link>
+               <Link href="/reviews" className="text-sm font-bold text-gray-500 hover:text-brand-blue transition-colors">Community</Link>
               <div className="h-6 w-px bg-gray-200"></div>
               
               <button onClick={() => setIsDesktopSearchOpen(!isDesktopSearchOpen)} className="text-gray-400 hover:text-brand-blue transition-colors">
