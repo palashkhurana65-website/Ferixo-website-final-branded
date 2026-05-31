@@ -10,7 +10,7 @@ import { useCartStore } from "../../../../lib/store";
 import Link from "next/link";
 import { sendGAEvent } from '@next/third-parties/google';
 import GoogleReviews from "../../../../components/storefront/GoogleReviews";
-import ProductReviews from "../../../../components/ProductReviews";
+import ProductReviews from "../../../../components/storefront/ProductReviews";
 
 export default function ProductDetailClient({ params }: { params: Promise<{ category: string, id: string }> }) {
   const router = useRouter();
@@ -180,7 +180,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org/",
-              "@type": "Product",
+              "@type": "Product", 
               "name": product.name,
               "image": displayImages,
               "description": product.description,

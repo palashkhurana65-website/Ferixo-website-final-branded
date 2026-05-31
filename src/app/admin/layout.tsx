@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Package, ShoppingBag, Ticket, LogOut } from "lucide-react";
+import { Package, ShoppingBag, Ticket, LogOut, MessageSquare } from "lucide-react";
 import { createClient } from "../../lib/supabase/client";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -20,6 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Inventory", href: "/admin/products", icon: Package },
     { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
     { name: "Coupons", href: "/admin/coupons", icon: Ticket },
+    { name: "Reviews", href: "/admin/reviews", icon: MessageSquare }, // Added Reviews here
   ];
 
   return (
