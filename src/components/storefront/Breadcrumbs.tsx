@@ -9,24 +9,25 @@ export default function Breadcrumbs({ productName }: { productName?: string }) {
   const paths = pathname.split('/').filter(Boolean);
 
   return (
-    <nav className="flex items-center space-x-2 text-xs font-bold text-gray-400 overflow-x-auto no-scrollbar py-4 whitespace-nowrap">
+    // 1. Changed static 'text-xs' to responsive 'text-xs md:text-sm lg:text-base'
+    <nav className="flex items-center space-x-2 text-xs md:text-sm lg:text-base font-bold text-gray-400 overflow-x-auto no-scrollbar py-4 whitespace-nowrap">
       <Link href="/" className="hover:text-primary transition-colors flex items-center">
-        <Home size={14} />
+        {/* 2. Replaced fixed size={14} with responsive width/height classes */}
+        <Home className="w-3.5 h-3.5 md:w-4 md:h-4 lg:w-5 lg:h-5" />
       </Link>
       
       {paths.map((path, index) => {
         const isLast = index === paths.length - 1;
         const href = `/${paths.slice(0, index + 1).join('/')}`;
         
-        // Format the string (e.g., 'coffee-cups' -> 'Coffee Cups')
         let displayName = path.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         
-        // Override the very last ID with the actual product shortName if provided
         if (isLast && productName) displayName = productName;
 
         return (
           <div key={path} className="flex items-center space-x-2">
-            <ChevronRight size={14} className="text-gray-300" />
+            {/* 3. Replaced fixed size={14} with responsive width/height classes here too */}
+            <ChevronRight className="w-3.5 h-3.5 md:w-4 md:h-4 lg:w-5 lg:h-5 text-gray-300" />
             {isLast ? (
               <span className="text-primary">{displayName}</span>
             ) : (
