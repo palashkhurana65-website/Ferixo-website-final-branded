@@ -11,13 +11,13 @@ const slides = [
     id: 1,
     desktopImg: "/hero/desktop_thermo.jpg", 
     mobileImg: "/hero/mobile_thermo.jpg",   
-    link: "/shop/bottles/560c29e3-81ad-4565-8760-31bfc3c210c0", // Add your manual navigation paths here later
+    link: "/shop/bottles/560c29e3-81ad-4565-8760-31bfc3c210c0?variant=yellow-1000-ml", // Add your manual navigation paths here later
   },
   {
     id: 2,
     desktopImg: "/hero/desktop_flexhandle.jpg",
     mobileImg: "/hero/mobile_flexhandle.jpg",
-    link: "/shop/bottles/560c29e3-81ad-4565-8760-31bfc3c210c0",
+    link: "/shop/tumblers/26faaa48-9dbe-4825-9a33-6851315a1333?variant=dusty-rose-900-ml",
   },  // /shop/coffee-cups/your-specific-product-id-here 
   {
     id: 3,
