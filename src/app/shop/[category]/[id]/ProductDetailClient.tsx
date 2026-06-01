@@ -201,7 +201,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
         />
       )}
       {/* OPTIMIZED BREADCRUMBS - Increased desktop sizing */}
-<div className="text-sm md:text-lg lg:text-xl font-medium text-gray-500 mb-6 md:mb-8">
+<div className="text-sm md:text-lg lg:text-xl pt-8 font-medium text-gray-500 mb-6 md:mb-8">
   <Breadcrumbs productName={product.shortName || product.name} />
 </div>
 

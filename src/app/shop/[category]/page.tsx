@@ -75,7 +75,7 @@ export default async function ShopCategoryPage(props: { params: Promise<{ catego
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-      <div className="mt-6 mb-4">
+      <div className="mt-6 pt-2 pb-2 mb-4">
         <Breadcrumbs />
       </div>
       
