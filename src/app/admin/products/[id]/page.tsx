@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, X, Image as ImageIcon, Trash2, Plus } from "lucide-react";
+import { ArrowLeft, Save, X, Image as ImageIcon, Trash2, Plus, Award } from "lucide-react";
 
 type VariantOption = { id?: string; colorName: string; stock: number; images: string[]; colorCode: string; price: number | null; mrp: number | null };
 type VariantGroup = { capacity: string; options: VariantOption[] };
@@ -18,7 +18,9 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
   const [activeVariantIndices, setActiveVariantIndices] = useState<{g: number, o: number} | null>(null);
 
   const [formData, setFormData] = useState<any>({
-    name: "", shortName: "", description: "", basePrice: 0, mrp: 0, stock: 0, category: "", images: [""], features: [""]
+    name: "", shortName: "", description: "", basePrice: 0, mrp: 0, stock: 0, category: "", images: [""], features: [""],
+    // 🚀 NEW: Badge Booleans
+    hasSus304: false, hasRigidQuality: false, hasLeakproofLid: false, hasEmbossedTexture: false, hasEmbroidedTexture: false, hasPuLeather: false
   });
 
   const [variantGroups, setVariantGroups] = useState<VariantGroup[]>([
@@ -48,6 +50,13 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
             category: data.category || "", 
             images: data.images?.length ? data.images : [""],
             features: data.features?.length ? data.features : [""],
+            // 🚀 NEW: Map stored badges
+            hasSus304: data.hasSus304 || false,
+            hasRigidQuality: data.hasRigidQuality || false,
+            hasLeakproofLid: data.hasLeakproofLid || false,
+            hasEmbossedTexture: data.hasEmbossedTexture || false,
+            hasEmbroidedTexture: data.hasEmbroidedTexture || false,
+            hasPuLeather: data.hasPuLeather || false,
         });
 
         if (data.variants && data.variants.length > 0) {
@@ -260,6 +269,34 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
                 </div>
             </div>
             
+            {/* 🚀 NEW: PRODUCT BADGES SELECTION UI */}
+            <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm">
+                <h2 className="text-lg font-bold text-primary mb-2 flex items-center gap-2">
+                    <Award size={20} className="text-brand-blue" /> Trust & Quality Badges
+                </h2>
+                <p className="text-xs text-gray-400 mb-6 font-bold uppercase tracking-wider">Select badges to display on the frontend (COD is always active)</p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {[
+                      { id: 'hasSus304', label: 'SUS 304' },
+                      { id: 'hasRigidQuality', label: 'Rigid Quality' },
+                      { id: 'hasLeakproofLid', label: 'Leakproof Lid' },
+                      { id: 'hasEmbossedTexture', label: 'Embossed Texture' },
+                      { id: 'hasEmbroidedTexture', label: 'Embroided Texture' },
+                      { id: 'hasPuLeather', label: 'PU Leather' }
+                    ].map(badge => (
+                        <button
+                            key={badge.id}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, [badge.id]: !formData[badge.id] })}
+                            className={`p-3.5 rounded-xl border-2 transition-all font-bold text-sm flex items-center justify-center outline-none active:scale-95 ${formData[badge.id] ? 'border-brand-blue bg-blue-50 text-brand-blue shadow-sm' : 'border-gray-100 bg-canvas text-gray-500 hover:border-gray-200 hover:bg-gray-50'}`}
+                        >
+                            {badge.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm">
                 <h2 className="text-lg font-bold text-primary mb-6 flex items-center gap-2">Features List</h2>
                 <div className="space-y-3">
@@ -273,6 +310,8 @@ export default function ProductEditor({ params }: { params: Promise<{ id: string
                 </div>
             </div>
         </div>
+      
+        
 
         {/* RIGHT COLUMN: PRICING & VARIANTS */}
         <div className="space-y-6">

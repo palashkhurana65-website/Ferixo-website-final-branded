@@ -288,7 +288,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
                {/* DYNAMIC BADGES */}
                {product.hasSus304 && (
                  <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
-                   <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                   <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-brand-blue border border-white/20 text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand-blue/30 group-hover:bg-blue-700">
                      <ShieldCheck size={30} strokeWidth={1.5} />
                    </div>
                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">SUS<br/>304</span>
@@ -297,7 +297,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
                
                {product.hasRigidQuality && (
                  <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
-                   <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                   <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-brand-blue border border-white/20 text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand-blue/30 group-hover:bg-blue-700">
                      <ShieldCheck size={30} strokeWidth={1.5} />
                    </div>
                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Rigid<br/>Quality</span>
@@ -306,7 +306,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
                
                {product.hasLeakproofLid && (
                  <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
-                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-brand-blue border border-white/20 text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand-blue/30 group-hover:bg-blue-700">
                      <Droplet size={30} strokeWidth={1.5} />
                    </div>
                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Leakproof<br/>Lid</span>
@@ -315,7 +315,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
                
                {product.hasEmbossedTexture && (
                  <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
-                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-brand-blue border border-white/20 text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand-blue/30 group-hover:bg-blue-700">
                      <Hexagon size={30} strokeWidth={1.5} />
                    </div>
                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Embossed<br/>Texture</span>
@@ -324,7 +324,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
                
                {product.hasEmbroidedTexture && (
                  <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
-                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-brand-blue border border-white/20 text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand-blue/30 group-hover:bg-blue-700">
                      <Sparkles size={30} strokeWidth={1.5} />
                    </div>
                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Embroided<br/>Texture</span>
@@ -333,7 +333,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
                
                {product.hasPuLeather && (
                  <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
-                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-brand-blue border border-white/20 text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand-blue/30 group-hover:bg-blue-700">
                      <Component size={30} strokeWidth={1.5} />
                    </div>
                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">PU<br/>Leather</span>

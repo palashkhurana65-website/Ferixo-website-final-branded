@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, ShoppingBag, Menu, X, User, LifeBuoy, Info, Home, ArrowRight } from "lucide-react";
+import { Search, ShoppingBag, Menu, X, User, LifeBuoy, Info, Home, ArrowRight, MessageSquare } from "lucide-react";
 import { useCartStore } from "../../lib/store";
 import { createClient } from "../../lib/supabase/client";
 
@@ -236,9 +236,12 @@ export default function Navbar() {
               <Link href="/support" className="flex items-center gap-4 p-4 rounded-2xl text-primary font-black hover:bg-brand-blue/5 hover:text-brand-blue transition-colors">
                 <div className="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center text-gray-400"><LifeBuoy size={20} /></div> Help & Support
               </Link>
-              <Link href="/about" className="flex items-center gap-4 p-4 rounded-2xl text-primary font-black hover:bg-brand-blue/5 hover:text-brand-blue transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center text-gray-400"><Info size={20} /></div> About Ferixo
+              <Link href="/reviews" className="flex items-center gap-4 p-4 rounded-2xl text-primary font-black hover:bg-brand-blue/5 hover:text-brand-blue transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center text-gray-400"><MessageSquare size={20} /></div> Reviews
               </Link>
+             {/* <Link href="/about" className="flex items-center gap-4 p-4 rounded-2xl text-primary font-black hover:bg-brand-blue/5 hover:text-brand-blue transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center text-gray-400"><Info size={20} /></div> About Ferixo
+              </Link>*/}
             </nav>
           </div>
           

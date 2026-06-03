@@ -30,7 +30,14 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       category: basicInfo.category, 
       basePrice: basicInfo.basePrice, 
       mrp: basicInfo.mrp, 
-      stock: basicInfo.stock
+      stock: basicInfo.stock,
+      // 🚀 NEW: Allow the badges to save to the database
+      hasSus304: basicInfo.hasSus304,
+      hasRigidQuality: basicInfo.hasRigidQuality,
+      hasLeakproofLid: basicInfo.hasLeakproofLid,
+      hasEmbossedTexture: basicInfo.hasEmbossedTexture,
+      hasEmbroidedTexture: basicInfo.hasEmbroidedTexture,
+      hasPuLeather: basicInfo.hasPuLeather
     }).eq('id', productId); // Use new variable name
     
     if (updateErr) throw updateErr;

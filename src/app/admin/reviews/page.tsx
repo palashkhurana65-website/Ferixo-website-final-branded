@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Star, CheckCircle, XCircle, Trash2, Crown, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Star, CheckCircle, XCircle, Trash2, Crown, Image as ImageIcon, Loader2, Edit } from "lucide-react";
 import Link from "next/link";
 
 export default function ReviewAdminPage() {
@@ -114,6 +114,9 @@ export default function ReviewAdminPage() {
                     </td>
                     <td className="p-6 align-top text-right">
                       <div className="flex items-center justify-end gap-3">
+                        <Link href={`/admin/reviews/${review.id}`} className="p-2 text-gray-400 hover:text-brand-blue hover:bg-blue-50 rounded-lg transition-colors" title="Edit Review">
+                          <Edit size={18} />
+                        </Link>
                         <button onClick={() => handleToggleFeature(review.id, review.isFeatured)} className={`p-2 rounded-lg transition-colors ${review.isFeatured ? 'bg-yellow-100 text-yellow-600' : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'}`} title="Feature"><Crown size={18} /></button>
                         <div className="w-px h-6 bg-gray-200 mx-1"></div>
                         <button onClick={() => handleUpdateStatus(review.id, 'approved')} className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Approve"><CheckCircle size={18} /></button>

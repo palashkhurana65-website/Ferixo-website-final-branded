@@ -30,7 +30,7 @@ export default function Footer() {
           <div className="lg:col-span-1 space-y-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.svg" alt="Ferixo" className="h-10 w-auto" />
-            <p className="text-gray-500 font-medium leading-relaxed text-sm">
+            <p className="text-gray-500 font-regular leading-relaxed text-sm">
               Engineered for utility, designed for life. Ferixo delivers premium insulated gear built to withstand your daily grind, keeping your beverages perfectly tempered from dawn till dusk.
             </p>
             <div className="flex items-center gap-4 pt-2">
