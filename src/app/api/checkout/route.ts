@@ -5,8 +5,9 @@ import { Resend } from 'resend';
 export async function POST(req: Request) {
   try {
     const supabase = await createClient();
-    // 1. We completely ignore totalAmount and finalAmount from the frontend
-    const { items, shippingAddress, couponCode, razorpayPaymentId } = await req.json();
+    
+    // 1. 🚀 NEW: Extract paymentMethod from the frontend request
+    const { items, shippingAddress, couponCode, razorpayPaymentId, paymentMethod } = await req.json();
 
     // 2. Identify User or Auto-Create Guest Account
     const { data: { session } } = await supabase.auth.getSession();
@@ -46,14 +47,12 @@ export async function POST(req: Request) {
     let serverSubtotal = 0;
     const secureOrderItems = [];
 
-    // Verify each item's true price against the database
     for (const item of items) {
       const dbProduct = dbProducts.find((p) => p.id === item.productId);
       if (!dbProduct) throw new Error(`Product not found: ${item.productId}`);
 
       let actualPrice = dbProduct.basePrice;
 
-      // If it's a specific variant, verify if it has a price override
       if (item.variantName && item.variantName !== "Standard Size" && dbProduct.Variant && dbProduct.Variant.length > 0) {
         const [cap, col] = item.variantName.split(" - ");
         const dbVariant = dbProduct.Variant.find((v: any) => v.capacity === cap && v.colorName === col);
@@ -64,7 +63,6 @@ export async function POST(req: Request) {
 
       serverSubtotal += actualPrice * item.quantity;
       
-      // Build a secure array for database insertion
       secureOrderItems.push({
         productId: item.productId,
         variantName: item.variantName,
@@ -85,7 +83,6 @@ export async function POST(req: Request) {
         appliedDiscount = coupon.code;
         serverDiscountAmount = (serverSubtotal * coupon.discount) / 100;
         
-        // Update ledger
         const { data: existingUsage } = await supabase.from('CouponUsage').select('id, usageCount').eq('email', shippingAddress.email).eq('couponCode', couponCode).single();
         if (existingUsage) {
           await supabase.from('CouponUsage').update({ usageCount: existingUsage.usageCount + 1, lastUsedAt: new Date().toISOString() }).eq('id', existingUsage.id);
@@ -104,6 +101,10 @@ export async function POST(req: Request) {
     const orderNumber = (count || 0) + 1;
     const displayId = `FER-${orderNumber.toString().padStart(3, '0')}-26`;
 
+    // 🚀 NEW: Determine Order Status dynamically based on Payment Method
+    const isCOD = paymentMethod === "COD";
+    const orderStatus = isCOD ? 'Processing' : 'Paid';
+
     // 5. Generate Order with VERIFIED Server Values
     const { data: order, error: orderError } = await supabase.from('Order').insert([{
       userId: userId || null, 
@@ -112,18 +113,19 @@ export async function POST(req: Request) {
       discountAmount: serverDiscountAmount,
       couponCode: appliedDiscount,
       finalAmount: serverFinalAmount,
-      shippingAddress: { ...shippingAddress, paymentId: razorpayPaymentId || "FREE_ORDER" }, 
-      status: 'Paid'
+      shippingAddress: { ...shippingAddress, paymentId: razorpayPaymentId || (isCOD ? "COD_PENDING" : "FREE_ORDER") }, 
+      status: orderStatus, // Assigns 'Processing' for COD, 'Paid' for Prepaid
+      paymentMethod: paymentMethod || 'PREPAID' // Saves the method securely to the column
     }]).select().single();
 
     if (orderError) throw orderError;
 
-    // 6. Insert Verified Order Items (The duplicate block is now removed)
+    // 6. Insert Verified Order Items
     const finalOrderItems = secureOrderItems.map(item => ({ ...item, orderId: order.id }));
     const { error: itemsError } = await supabase.from('OrderItem').insert(finalOrderItems);
     if (itemsError) throw itemsError;
 
-    // 7. Dispatch Transactional Emails via Resend (Updated to use serverFinalAmount)
+    // 7. 🚀 NEW: Dynamic Transactional Emails via Resend
     if (process.env.RESEND_API_KEY) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       
@@ -136,6 +138,7 @@ export async function POST(req: Request) {
             <h3>Shipping Details:</h3>
             <p>${shippingAddress.address}<br/>${shippingAddress.city}, ${shippingAddress.state} - ${shippingAddress.pin}</p>
             <h3>Order Total: ₹${serverFinalAmount.toFixed(2)}</h3>
+            <p><strong>Payment Method:</strong> ${isCOD ? 'Cash on Delivery 🚚 (Please keep exact change ready at delivery)' : 'Prepaid (Paid Online) ✅'}</p>
           </div>
         </div>
       `;
@@ -152,8 +155,12 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from: 'Ferixo System <info@ferixo.com>',
         to: 'palashkhurana65@gmail.com',
-        subject: `NEW ORDER ALERT: ${displayId}`,
-        html: `<h2>New Order Received!</h2><p><strong>Order ID:</strong> ${displayId}</p><p><strong>Customer:</strong> ${shippingAddress.fullName} (${shippingAddress.phone})</p><p><strong>Total:</strong> ₹${serverFinalAmount.toFixed(2)}</p>`,
+        subject: isCOD ? `🚨 NEW COD ORDER: ${displayId} (Collect Cash)` : `NEW ORDER ALERT: ${displayId}`,
+        html: `<h2>New Order Received!</h2>
+          <p><strong>Order ID:</strong> ${displayId}</p>
+          <p><strong>Customer:</strong> ${shippingAddress.fullName} (${shippingAddress.phone})</p>
+          <p><strong>Total:</strong> ₹${serverFinalAmount.toFixed(2)}</p>
+          <p><strong>Payment Method:</strong> ${isCOD ? '<span style="color:red; font-weight:bold; font-size:18px;">CASH ON DELIVERY - COLLECT CASH</span>' : 'Prepaid Online'}</p>`,
       });
     }
 

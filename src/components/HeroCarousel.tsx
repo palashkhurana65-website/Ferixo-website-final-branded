@@ -23,7 +23,7 @@ const slides = [
     id: 3,
     desktopImg: "/hero/desktop_hydropro.jpg", 
     mobileImg: "/hero/mobile_hydropro.jpg",  
-    link: "#",
+    link: "/shop/tumblers/6d06f14a-434b-470e-9fe7-7167ea51ae49?variant=white-1200-ml",
   },
 ];
 

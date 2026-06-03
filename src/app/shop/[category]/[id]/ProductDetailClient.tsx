@@ -4,13 +4,14 @@ import { useState, useEffect, use } from "react";
 import { createClient } from "../../../../lib/supabase/client";
 import Breadcrumbs from "../../../../components/storefront/Breadcrumbs";
 import ProductCard from "../../../../components/storefront/ProductCard";
-import { Minus, Plus, ShoppingBag, CheckCircle2, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { Minus, Plus, ShoppingBag, CheckCircle2, ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Truck, Droplet, Sparkles, Hexagon, Component } from "lucide-react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCartStore } from "../../../../lib/store";
 import Link from "next/link";
 import { sendGAEvent } from '@next/third-parties/google';
 import GoogleReviews from "../../../../components/storefront/GoogleReviews";
 import ProductReviews from "../../../../components/storefront/ProductReviews";
+
 
 export default function ProductDetailClient({ params }: { params: Promise<{ category: string, id: string }> }) {
   const router = useRouter();
@@ -272,7 +273,75 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
                  </>
                )}
              </div>
+
+             {/* 🚀 NEW: TRUST & QUALITY BADGES (Premium Dark Theme & Blue COD) */}
+             <div className="flex flex-wrap gap-3 md:gap-4 mt-8">
+               
+               {/* STATIC BADGE: Always shows (🚀 Hidden on mobile because we float it!) */}
+               <div className="hidden md:flex flex-col items-center gap-2 group cursor-default w-[72px]">
+                 <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-brand-blue border border-white/20 text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand-blue/30 group-hover:bg-blue-700">
+                   <Truck size={30} strokeWidth={1.5} />
+                 </div>
+                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-brand-blue transition-colors">COD<br/>Available</span>
+               </div>
+               
+               {/* DYNAMIC BADGES */}
+               {product.hasSus304 && (
+                 <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
+                   <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                     <ShieldCheck size={30} strokeWidth={1.5} />
+                   </div>
+                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">SUS<br/>304</span>
+                 </div>
+               )}
+               
+               {product.hasRigidQuality && (
+                 <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
+                   <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                     <ShieldCheck size={30} strokeWidth={1.5} />
+                   </div>
+                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Rigid<br/>Quality</span>
+                 </div>
+               )}
+               
+               {product.hasLeakproofLid && (
+                 <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                     <Droplet size={30} strokeWidth={1.5} />
+                   </div>
+                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Leakproof<br/>Lid</span>
+                 </div>
+               )}
+               
+               {product.hasEmbossedTexture && (
+                 <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                     <Hexagon size={30} strokeWidth={1.5} />
+                   </div>
+                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Embossed<br/>Texture</span>
+                 </div>
+               )}
+               
+               {product.hasEmbroidedTexture && (
+                 <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                     <Sparkles size={30} strokeWidth={1.5} />
+                   </div>
+                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">Embroided<br/>Texture</span>
+                 </div>
+               )}
+               
+               {product.hasPuLeather && (
+                 <div className="flex flex-col items-center gap-2 group cursor-default w-[72px]">
+                   <div className="w-16 h-16  flex items-center justify-center rounded-2xl bg-gray-900 border border-gray-700 text-gray-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:border-gray-500 group-hover:text-white">
+                     <Component size={30} strokeWidth={1.5} />
+                   </div>
+                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center leading-tight group-hover:text-primary transition-colors">PU<br/>Leather</span>
+                 </div>
+               )}
+             </div>
            </div>
+                 
 
            {/* TIER 2: COLORS (Mobile: Order 1 | Desktop: Order 2) */}
            <div className="order-1 md:order-2 mt-0 md:mt-8">
@@ -332,7 +401,18 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
            </div>
 
            {/* CTAs (Mobile: Sticky Bottom via Fixed Class | Desktop: Order 5 inside flow) */}
-           <div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-gray-200 p-4 pb-safe md:static md:bg-transparent md:border-none md:p-0 md:mt-8 md:order-5 z-40">
+           <div className="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 p-4 pb-safe md:static md:bg-transparent md:border-none md:p-0 md:mt-8 md:order-5 z-40">
+              
+              {/* 🚀 FIXED: FLOATING CIRCULAR COD BADGE (Lifted & Color Inverted) */}
+              {/* Uses bottom-28 (112px) to ensure a wide, clean gap above the CTA bar */}
+              <div className="fixed bottom-28 right-4 md:hidden z-50 animate-fade-in-up">
+                 <div className="flex flex-col items-center justify-center w-16 h-16 bg-brand-blue rounded-full shadow-xl shadow-brand-blue/40 border border-white/20">
+                   <Truck size={24} strokeWidth={2.5} className="text-white mb-0.5" />
+                   <span className="text-[9px] font-black text-white uppercase tracking-widest leading-none">COD</span>
+                   
+                 </div>
+              </div>
+
               <div className="max-w-7xl mx-auto flex gap-4 md:max-w-none">
                 <button onClick={handleAddToCart} className="flex-1 bg-canvas border-2 border-gray-200 text-primary py-4 rounded-2xl font-black text-lg hover:border-brand-blue transition-all active:scale-95 flex items-center justify-center gap-2">
                   <ShoppingBag size={20} /> Add to Cart

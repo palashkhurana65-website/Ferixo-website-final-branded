@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "../../lib/store";
-import { Lock, Tag, ArrowRight, ShoppingBag, MapPin, ChevronRight, Check } from "lucide-react";
+import { Lock, Tag, ArrowRight, ShoppingBag, MapPin, ChevronRight, Check, CreditCard, Truck } from "lucide-react";
 import Link from "next/link";
 import { trackMetaPurchase } from "../actions/metaCapi";
 
@@ -22,6 +22,9 @@ export default function CheckoutPage() {
   const { items, clearCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState(1);
+  
+  // 🚀 NEW: State to track selected payment method
+  const [paymentMethod, setPaymentMethod] = useState("PREPAID");
   
   const [formData, setFormData] = useState({ fullName: "", email: "", phone: "", address: "", city: "", state: "", pin: "" });
   const [promoCode, setPromoCode] = useState("");
@@ -87,7 +90,7 @@ export default function CheckoutPage() {
     setLoading(true);
 
     // ====================================================================
-    // BYPASS RAZORPAY FOR 100% FREE ORDERS (< ₹1.00)
+    // 1. BYPASS RAZORPAY FOR 100% FREE ORDERS (< ₹1.00)
     // ====================================================================
     if (finalTotal < 1) {
       try {
@@ -96,53 +99,69 @@ export default function CheckoutPage() {
           shippingAddress: formData,
           couponCode: discountPercent > 0 ? promoCode.toUpperCase() : null,
           totalAmount: subtotal, 
-          finalAmount: finalTotal, // Will be 0
-          razorpayPaymentId: "FREE_ORDER_100_DISCOUNT" // Dummy ID for database
+          finalAmount: finalTotal,
+          razorpayPaymentId: "FREE_ORDER_100_DISCOUNT",
+          paymentMethod: "PREPAID" // Logged as prepaid since no cash is due
         };
         const dbRes = await fetch('/api/checkout', {
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify(payload)
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
         
-        if (!dbRes.ok) {
-          const errorData = await dbRes.json();
-          throw new Error(errorData.error || errorData.message || "Database transaction failed");
-        }
+        if (!dbRes.ok) throw new Error("Database transaction failed");
         
-        // 🚀 META CAPI: Track 100% Discounted/Free Orders
-        await trackMetaPurchase({
-          orderId: `FREE_${Date.now()}`,
-          value: subtotal, // Send the original value so Meta knows the cart worth
-          currency: "INR",
-          userEmail: formData.email,
-          userPhone: formData.phone,
-        });
-        
+        await trackMetaPurchase({ orderId: `FREE_${Date.now()}`, value: subtotal, currency: "INR", userEmail: formData.email, userPhone: formData.phone });
         clearCart();
         router.push('/order-success');
-        return; // Exit function so it doesn't try to load Razorpay
+        return;
       } catch (err: any) { 
         alert(`Failed to record free order: ${err.message}`); 
-        setLoading(false);
-        return;
+        setLoading(false); return;
       }
     }
 
     // ====================================================================
-    // STANDARD RAZORPAY CHECKOUT FOR PAID ORDERS
+    // 2. CASH ON DELIVERY (COD) WORKFLOW
+    // ====================================================================
+    if (paymentMethod === "COD") {
+      try {
+        const payload = {
+          items, 
+          shippingAddress: formData,
+          couponCode: discountPercent > 0 ? promoCode.toUpperCase() : null,
+          totalAmount: subtotal, 
+          finalAmount: finalTotal,
+          razorpayPaymentId: "COD_PENDING", 
+          paymentMethod: "COD" // 🚀 Explicitly marking it as COD
+        };
+        
+        const dbRes = await fetch('/api/checkout', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        
+        if (!dbRes.ok) throw new Error("Database transaction failed");
+        
+        await trackMetaPurchase({ orderId: `COD_${Date.now()}`, value: finalTotal, currency: "INR", userEmail: formData.email, userPhone: formData.phone });
+        clearCart();
+        router.push('/order-success');
+        return;
+      } catch (err: any) { 
+        alert(`Failed to record COD order: ${err.message}`); 
+        setLoading(false); return;
+      }
+    }
+
+    // ====================================================================
+    // 3. STANDARD RAZORPAY CHECKOUT FOR PAID ORDERS
     // ====================================================================
     const resScript = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
     if (!resScript) {
       alert("Razorpay failed to load. Please check your connection.");
-      setLoading(false);
-      return;
+      setLoading(false); return;
     }
 
     try {
       const orderRes = await fetch('/api/razorpay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items, couponCode: discountPercent > 0 ? promoCode.toUpperCase() : null })
       });
       const orderData = await orderRes.json();
@@ -150,59 +169,36 @@ export default function CheckoutPage() {
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "Ferixo",
-        description: "Premium Order Checkout",
-        order_id: orderData.id,
+        amount: orderData.amount, currency: orderData.currency, name: "Ferixo", description: "Premium Order Checkout", order_id: orderData.id,
         handler: async function (response: any) {
           try {
             const payload = {
-              items, 
-              shippingAddress: formData,
-              couponCode: discountPercent > 0 ? promoCode.toUpperCase() : null,
-              totalAmount: subtotal, 
-              finalAmount: finalTotal,
-              razorpayPaymentId: response.razorpay_payment_id
+              items, shippingAddress: formData, couponCode: discountPercent > 0 ? promoCode.toUpperCase() : null,
+              totalAmount: subtotal, finalAmount: finalTotal,
+              razorpayPaymentId: response.razorpay_payment_id,
+              paymentMethod: "PREPAID" // 🚀 Passed into DB
             };
             const dbRes = await fetch('/api/checkout', {
               method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
             });
+            if (!dbRes.ok) throw new Error("Database transaction failed");
             
-            if (!dbRes.ok) {
-              const errorData = await dbRes.json();
-              throw new Error(errorData.error || errorData.message || "Database transaction failed");
-            }
-            
-            // 🚀 META CAPI: Track Standard Paid Purchases
-            await trackMetaPurchase({
-              orderId: response.razorpay_payment_id,
-              value: finalTotal, // Send the exact amount they paid
-              currency: "INR",
-              userEmail: formData.email,
-              userPhone: formData.phone,
-            });  
-
+            await trackMetaPurchase({ orderId: response.razorpay_payment_id, value: finalTotal, currency: "INR", userEmail: formData.email, userPhone: formData.phone });  
             clearCart();
             router.push('/order-success');
           } catch (err: any) { 
-            console.error("🚨 CRITICAL BACKEND ERROR:", err);
-            alert(`Payment successful, but order failed: ${err.message}. Your payment ID is ${response.razorpay_payment_id}.`); 
+            console.error(err); alert(`Payment successful, but order failed: ${err.message}`); 
           }
         },
-        prefill: { name: formData.fullName, email: formData.email, contact: formData.phone },
-        theme: { color: "#004de7" }
+        prefill: { name: formData.fullName, email: formData.email, contact: formData.phone }, theme: { color: "#004de7" }
       };
 
       const paymentObject = new (window as any).Razorpay(options);
       paymentObject.open();
       paymentObject.on('payment.failed', () => alert("Payment failed or cancelled."));
 
-    } catch (err: any) {
-      alert(err.message || "Failed to initialize payment.");
-    } finally {
-      setLoading(false);
-    }
+    } catch (err: any) { alert(err.message || "Failed to initialize payment."); } 
+    finally { setLoading(false); }
   };
 
   if (!mounted) return null;
@@ -361,23 +357,70 @@ export default function CheckoutPage() {
           </div>
         )}
 
-        {/* STEP 3: PAYMENT LOCK-IN */}
+        {/* STEP 3: PAYMENT SELECTION & LOCK-IN */}
         {step === 3 && (
            <div className="p-6 md:p-12 text-center slide-up-mobile">
               <div className="w-20 h-20 bg-blue-50 text-brand-blue rounded-full flex items-center justify-center mx-auto mb-6">
                  <Lock size={36} />
               </div>
-              <h2 className="text-3xl font-black text-primary tracking-tight mb-2">Secure Payment</h2>
-              <p className="text-gray-500 font-medium mb-8">You are about to pay <span className="font-bold text-primary">₹{finalTotal.toFixed(2)}</span>. Your connection is fully encrypted via Razorpay.</p>
+              <h2 className="text-3xl font-black text-primary tracking-tight mb-2">Select Payment Method</h2>
+              <p className="text-gray-500 font-medium mb-8">
+                Total Amount: <span className="font-bold text-primary">₹{finalTotal.toFixed(2)}</span>
+              </p>
               
-              <div className="bg-canvas p-4 rounded-2xl text-left border border-gray-200 mb-8 inline-block w-full max-w-sm">
+              {/* PAYMENT TOGGLE CARDS */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto mb-8">
+                {/* Prepaid Option */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("PREPAID")}
+                  className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all ${
+                    paymentMethod === "PREPAID"
+                      ? "border-brand-blue bg-blue-50 text-brand-blue shadow-sm"
+                      : "border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  <CreditCard size={32} className={`mb-3 ${paymentMethod === "PREPAID" ? "text-brand-blue" : "text-gray-400"}`} />
+                  <span className={`font-black text-base ${paymentMethod === "PREPAID" ? "text-brand-blue" : "text-primary"}`}>Pay Online</span>
+                  <span className="text-xs font-medium mt-1 opacity-80">UPI, Cards, NetBanking</span>
+                </button>
+
+                {/* COD Option */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("COD")}
+                  className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all ${
+                    paymentMethod === "COD"
+                      ? "border-brand-blue bg-blue-50 text-brand-blue shadow-sm"
+                      : "border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  <Truck size={32} className={`mb-3 ${paymentMethod === "COD" ? "text-brand-blue" : "text-gray-400"}`} />
+                  <span className={`font-black text-base ${paymentMethod === "COD" ? "text-brand-blue" : "text-primary"}`}>Cash on Delivery</span>
+                  <span className="text-xs font-medium mt-1 opacity-80">Pay when it arrives</span>
+                </button>
+              </div>
+
+              {/* ADDRESS SUMMARY */}
+              <div className="bg-canvas p-4 rounded-2xl text-left border border-gray-200 mb-8 inline-block w-full max-w-md">
                  <p className="text-xs uppercase font-bold text-gray-400 mb-1">Delivering to:</p>
                  <p className="text-sm font-bold text-primary">{formData.fullName}</p>
                  <p className="text-sm text-gray-500">{formData.address}, {formData.city}, {formData.state} - {formData.pin}</p>
               </div>
 
-              <button onClick={handlePlaceOrder} disabled={loading} className="w-full max-w-sm mx-auto bg-brand-blue text-white py-4.5 rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-xl shadow-brand-blue/30 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50">
-                {loading ? "Connecting to Bank..." : "Pay Securely Now"} <Check size={20} />
+              {/* DYNAMIC SUBMIT BUTTON */}
+              <button 
+                onClick={handlePlaceOrder} 
+                disabled={loading} 
+                className="w-full max-w-md mx-auto bg-brand-blue text-white py-4.5 rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-xl shadow-brand-blue/30 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {loading ? (
+                  "Processing Order..."
+                ) : paymentMethod === "PREPAID" ? (
+                  <>Pay Securely Now <Check size={20} /></>
+                ) : (
+                  <>Confirm COD Order <Check size={20} /></>
+                )}
               </button>
            </div>
         )}

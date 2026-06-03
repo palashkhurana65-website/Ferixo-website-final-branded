@@ -138,9 +138,17 @@ export default function OrdersAdminPage() {
                   {/* Column 1: Identity & Logistics */}
                   <div className="flex-1 space-y-4">
                     <div>
-                      <div className="flex items-center gap-3 mb-1">
+                      <div className="flex flex-wrap items-center gap-3 mb-1">
                         <span className="font-black font-mono text-brand-blue tracking-tight">{order.displayId || "FER-OLD-ORDER"}</span>
                         <span className="text-xs text-gray-400 font-bold">{formattedDate}</span>
+                        {/* 🚀 NEW: Dynamic Payment Method Badge */}
+                        <span className={`text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md ${
+                          order.paymentMethod === 'COD' 
+                            ? 'bg-blue-100 text-brand-blue border border-blue-200' 
+                            : 'bg-green-100 text-green-600 border border-green-200'
+                        }`}>
+                          {order.paymentMethod === 'COD' ? '🚚 COD' : '✅ PREPAID'}
+                        </span>
                       </div>
                       <p className="text-lg font-black text-primary">{address?.fullName || "Guest User"}</p>
                       <p className="text-sm text-gray-500 font-medium leading-snug max-w-sm mt-1">
@@ -152,14 +160,22 @@ export default function OrdersAdminPage() {
 
                     {/* Interactive Status Pipeline */}
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-2">Update Status</p>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-2 flex items-center">
+                        Update Status 
+                        {/* 🚀 NEW: Cash Collection Warning for Active COD Orders */}
+                        {order.paymentMethod === 'COD' && order.status !== 'Delivered' && (
+                           <span className="ml-2 text-[10px] text-brand-orange bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100">
+                             Collect Cash on Delivery
+                           </span>
+                        )}
+                      </p>
                       <div className="flex flex-wrap gap-2">
                         {['Preparing for dispatch', 'Shipped', 'Delivered'].map(status => (
                           <button
                             key={status}
                             onClick={() => updateOrderStatus(order.id, status)}
                             className={`text-[10px] md:text-xs uppercase font-bold tracking-wider px-3 md:px-4 py-2 rounded-xl transition-all ${
-                              order.status === status || (order.status === 'Pending' && status === 'Preparing for dispatch')
+                              order.status === status || ((order.status === 'Pending' || order.status === 'Processing') && status === 'Preparing for dispatch')
                                 ? status === 'Delivered' ? 'bg-green-500 text-white shadow-md'
                                 : status === 'Shipped' ? 'bg-brand-blue text-white shadow-md'
                                 : 'bg-brand-orange text-white shadow-md'
@@ -201,8 +217,13 @@ export default function OrdersAdminPage() {
                         </div>
                       )}
                       <div className="flex justify-between items-center mt-2">
-                        <span className="font-black text-primary uppercase tracking-wider text-xs">Total Paid</span>
-                        <span className="text-xl font-black text-primary">₹{(order.finalAmount || 0).toFixed(2)}</span>
+                        {/* 🚀 NEW: Changes label and color based on collection status */}
+                        <span className={`font-black uppercase tracking-wider text-xs ${order.paymentMethod === 'COD' && order.status !== 'Delivered' ? 'text-brand-orange' : 'text-primary'}`}>
+                          {order.paymentMethod === 'COD' && order.status !== 'Delivered' ? 'To Collect' : 'Total Paid'}
+                        </span>
+                        <span className={`text-xl font-black ${order.paymentMethod === 'COD' && order.status !== 'Delivered' ? 'text-brand-orange' : 'text-primary'}`}>
+                          ₹{(order.finalAmount || 0).toFixed(2)}
+                        </span>
                       </div>
                     </div>
                   </div>
