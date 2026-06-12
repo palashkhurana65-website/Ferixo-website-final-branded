@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       serverSubtotal += actualPrice * item.quantity;
     }
 
-    // 2. Validate Coupon
+    // 2. Validate Standard Coupon
     let serverDiscountAmount = 0;
     if (couponCode) {
       const { data: coupon } = await supabase.from('Coupon').select('*').eq('code', couponCode).eq('isActive', true).single();
@@ -40,7 +40,21 @@ export async function POST(req: Request) {
       }
     }
 
-    const serverFinalAmount = serverSubtotal - serverDiscountAmount;
+    // 🚀 NEW: SECURE MILESTONE VALIDATION
+    let milestoneDiscountAmount = 0;
+    const { data: activeMilestone } = await supabase.from('MilestoneReward').select('*').eq('isActive', true).single();
+
+    if (activeMilestone && serverSubtotal >= activeMilestone.thresholdAmount) {
+      if (activeMilestone.rewardType === 'discount_percentage') {
+        milestoneDiscountAmount = (serverSubtotal * parseFloat(activeMilestone.rewardValue)) / 100;
+      } else if (activeMilestone.rewardType === 'discount_fixed') {
+        milestoneDiscountAmount = parseFloat(activeMilestone.rewardValue);
+      }
+      // Note: If it's a 'free_product', we don't deduct money here. The item is just added at checkout.
+    }
+
+    // Combine both discounts and ensure total never drops below 0
+    const serverFinalAmount = Math.max(0, serverSubtotal - serverDiscountAmount - milestoneDiscountAmount);
 
     // 3. Generate Razorpay Order securely (Amount is in Paise, so multiply by 100)
     const options = {

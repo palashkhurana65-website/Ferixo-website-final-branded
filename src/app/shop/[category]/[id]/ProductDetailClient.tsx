@@ -20,6 +20,7 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
   const unwrappedParams = use(params);
   const supabase = createClient();
   const addItem = useCartStore((state) => state.addItem);
+  const isResumingCheckout = searchParams.get('resumeCheckout') === 'true';
   
   const [product, setProduct] = useState<any>(null);
   const [relevantProducts, setRelevantProducts] = useState<any[]>([]);
@@ -150,9 +151,14 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
       }]
     });
 
-    // 3. Show the UI Popup
-    setShowCartPopup(true);
-    setTimeout(() => setShowCartPopup(false), 3000);
+    // 🚀 PHASE 3: Intercept the default behavior
+    if (isResumingCheckout) {
+      router.push('/checkout'); // Instantly return them to checkout Step 2
+    } else {
+      // 3. Show the UI Popup normally
+      setShowCartPopup(true);
+      setTimeout(() => setShowCartPopup(false), 3000);
+    }
   };
 
   const handleBuyNow = () => {
@@ -414,12 +420,22 @@ export default function ProductDetailClient({ params }: { params: Promise<{ cate
               </div>
 
               <div className="max-w-7xl mx-auto flex gap-4 md:max-w-none">
-                <button onClick={handleAddToCart} className="flex-1 bg-canvas border-2 border-gray-200 text-primary py-4 rounded-2xl font-black text-lg hover:border-brand-blue transition-all active:scale-95 flex items-center justify-center gap-2">
-                  <ShoppingBag size={20} /> Add to Cart
-                </button>
-                <button onClick={handleBuyNow} className="flex-1 bg-brand-blue text-white py-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-lg shadow-brand-blue/30 active:scale-95">
-                  Buy Now
-                </button>
+                {isResumingCheckout ? (
+                  // 🚀 PHASE 3: Single, obvious button if they are in the loop
+                  <button onClick={handleAddToCart} className="w-full bg-brand-blue border-2 border-brand-blue text-white py-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-lg shadow-brand-blue/30 active:scale-95 flex items-center justify-center gap-2">
+                    <ShoppingBag size={20} /> Add & Return to Checkout
+                  </button>
+                ) : (
+                  // Standard Buttons for normal browsing
+                  <>
+                    <button onClick={handleAddToCart} className="flex-1 bg-canvas border-2 border-gray-200 text-primary py-4 rounded-2xl font-black text-lg hover:border-brand-blue transition-all active:scale-95 flex items-center justify-center gap-2">
+                      <ShoppingBag size={20} /> Add to Cart
+                    </button>
+                    <button onClick={handleBuyNow} className="flex-1 bg-brand-blue text-white py-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-lg shadow-brand-blue/30 active:scale-95">
+                      Buy Now
+                    </button>
+                  </>
+                )}
               </div>
            </div>
 
